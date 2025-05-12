@@ -35,9 +35,35 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 60px;
+            width: 100vw;
+            height: 100vh;
+            padding: 0;
+        }
+
+        #addFormSection > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             width: 100%;
-            padding: 40px;
+        }
+
+        #addFormSection form {
+            align-items: center;
+        }
+
+        .main-logo-display {
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            margin-top: 10px;
+            display: flex;
+        }
+
+        h2 {
+            text-align: center;
+            width: 100%;
+            margin-bottom: 28px;
         }
 
         .arrow-btn {
@@ -104,13 +130,6 @@
             width: 24px;
             height: 24px;
             border-radius: 4px;
-        }
-
-        h2 {
-            text-align: center;
-            font-size: 1.5em;
-            margin-bottom: 15px;
-            letter-spacing: 1px;
         }
 
         .top-right {
@@ -207,12 +226,6 @@
             top: 50%;
             transform: translateY(-50%);
         }
-        .main-logo-display {
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 30px;
-            margin-top: 10px;
-        }
         .main-logo-display img {
             width: 64px;
             height: 64px;
@@ -238,6 +251,117 @@
             background: #fa71cd;
             color: #fff;
         }
+        .menu-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(30, 20, 40, 0.85);
+            padding: 12px 24px 12px 12px;
+            border-bottom-right-radius: 16px;
+            z-index: 1100;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .menu-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1em;
+            letter-spacing: 1px;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .menu-btn:hover {
+            background: #c471f5;
+            color: #fff;
+        }
+        .viewer-website-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        .view-options-bar {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(30, 20, 40, 0.92);
+            color: #fff;
+            padding: 18px 0 14px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 18px;
+            z-index: 1200;
+            font-size: 1.1em;
+        }
+        .view-btn {
+            background: #fff;
+            color: #c471f5;
+            border: none;
+            border-radius: 6px;
+            padding: 7px 18px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .view-btn:hover, .view-btn.active {
+            background: #c471f5;
+            color: #fff;
+        }
+        .all-passwords-list {
+            width: 100%;
+            margin-top: 30px;
+        }
+        .all-passwords-list-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.04);
+            border-radius: 8px;
+            padding: 16px 24px;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+        .all-passwords-list-row span {
+            min-width: 120px;
+            text-align: center;
+        }
+        .all-passwords-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+        .all-passwords-grid-card {
+            background: rgba(255,255,255,0.07);
+            border-radius: 12px;
+            padding: 22px 28px;
+            min-width: 220px;
+            max-width: 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08);
+        }
+        .all-passwords-grid-card .website {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 8px;
+        }
+        .all-passwords-grid-card .username,
+        .all-passwords-grid-card .password {
+            font-size: 1em;
+            margin-bottom: 4px;
+            word-break: break-all;
+        }
     </style>
 </head>
 <body>
@@ -252,6 +376,12 @@
             <input type="password" name="pin" placeholder="4-digit PIN" maxlength="4" required><br>
             <button type="submit">Switch User</button>
         </form>
+    </div>
+
+    <!-- Menu Bar (top left) -->
+    <div class="menu-bar">
+        <button class="menu-btn" onclick="showPasswords()">My Passwords</button>
+        <button class="menu-btn" onclick="showAllPasswords()">View All Passwords</button>
     </div>
 
     <!-- Fullscreen Form Layout -->
@@ -287,28 +417,42 @@
     <div class="main-wrapper password-viewer-centered" id="passwordViewerSection" style="display:none; position: relative;">
         <button class="arrow-btn viewer-arrow left" onclick="prevPassword()"><i class="fas fa-chevron-left"></i></button>
         <div class="viewer-content">
+            <div class="viewer-website-name" id="viewerWebsiteTitle">Website</div>
             <div class="website-display" style="margin-bottom: 30px; justify-content: center;">
                 <img src="https://www.google.com/s2/favicons?sz=64&domain=example.com" id="viewerFavicon" alt="favicon">
                 <span id="viewerWebsiteName">example.com</span>
             </div>
             <div style="margin-bottom: 20px; text-align: center;">
                 <div style="margin-bottom: 8px;">USERNAME</div>
-                <input type="text" id="viewerUsername" value="demo_user" readonly style="width:100%;margin-bottom:5px;text-align:center;">
+                <input type="text" id="viewerUsername" value="" readonly style="width:100%;margin-bottom:5px;text-align:center;">
                 <button class="copy-btn" onclick="copyViewerUsername()">COPY USERNAME</button>
             </div>
             <div style="text-align: center;">
                 <div style="margin-bottom: 8px;">PASSWORD</div>
-                <input type="text" id="viewerPassword" value="demo_pass" readonly style="width:100%;margin-bottom:5px;text-align:center;">
+                <input type="text" id="viewerPassword" value="" readonly style="width:100%;margin-bottom:5px;text-align:center;">
                 <button class="copy-btn" onclick="copyViewerPassword()">COPY PASSWORD</button>
             </div>
         </div>
         <button class="arrow-btn viewer-arrow right" onclick="nextPassword()"><i class="fas fa-chevron-right"></i></button>
     </div>
-    <!-- Back Button for Password Viewer (top left of page) -->
-    <button class="back-btn" id="backBtn" style="display:none;" onclick="showAddForm()"><i class="fas fa-arrow-left"></i> Back</button>
 
-    <!-- MY PASSWORDS Button -->
-    <button class="my-passwords-btn" id="myPasswordsBtn" onclick="showPasswords()">MY PASSWORDS</button>
+    <!-- View All Passwords Bottom Bar (hidden by default) -->
+    <div class="view-options-bar" id="viewOptionsBar" style="display:none;">
+        <span>Choose view:</span>
+        <button class="view-btn" id="listViewBtn" onclick="setListView()">List View</button>
+        <button class="view-btn" id="gridViewBtn" onclick="setGridView()">Grid View</button>
+    </div>
+
+    <!-- Back Button below menu bar, in normal flow -->
+    <button class="back-btn" id="backBtn" style="display:none; margin-top: 70px; margin-left: 20px;" onclick="showAddForm()"><i class="fas fa-arrow-left"></i> Back</button>
+
+    <!-- View All Passwords Section (hidden by default) -->
+    <div id="allPasswordsSection" style="display:none; width: 100%; max-width: 900px; margin: 0 auto;">
+        <div id="allPasswordsListView"></div>
+        <div id="allPasswordsGridView" style="display:none;"></div>
+    </div>
+
+    <!-- Credentials JSON for JS (hidden, for JS only) -->
 
     <script>
         function copyPassword() {
@@ -353,15 +497,18 @@
         function showPasswords() {
             document.getElementById('addFormSection').style.display = 'none';
             document.getElementById('passwordViewerSection').style.display = 'flex';
-            document.getElementById('myPasswordsBtn').style.display = 'none';
-            document.getElementById('backBtn').style.display = 'flex';
+            document.getElementById('backBtn').style.display = 'block';
+            document.getElementById('viewOptionsBar').style.display = 'none';
+            document.getElementById('allPasswordsSection').style.display = 'none';
+            updateViewer();
         }
         // Return to Add Form UI
         function showAddForm() {
             document.getElementById('addFormSection').style.display = 'flex';
             document.getElementById('passwordViewerSection').style.display = 'none';
-            document.getElementById('myPasswordsBtn').style.display = 'block';
             document.getElementById('backBtn').style.display = 'none';
+            document.getElementById('viewOptionsBar').style.display = 'none';
+            document.getElementById('allPasswordsSection').style.display = 'none';
         }
         // Copy functions for viewer
         function copyViewerUsername() {
@@ -395,6 +542,118 @@
                 alert("Password generated and copied!");
             });
         }
+
+        // Credentials from backend
+        var credentials = JSON.parse(document.getElementById('credentials-data').textContent);
+        var currentIndex = 0;
+        var allPasswordsMode = false;
+        var currentView = 'list';
+
+        function updateViewer() {
+            if (credentials.length === 0) {
+                document.getElementById('viewerWebsiteTitle').textContent = 'No credentials';
+                document.getElementById('viewerWebsiteName').textContent = '';
+                document.getElementById('viewerFavicon').src = 'https://www.google.com/s2/favicons?sz=64&domain=example.com';
+                document.getElementById('viewerUsername').value = '';
+                document.getElementById('viewerPassword').value = '';
+                return;
+            }
+            const cred = credentials[currentIndex];
+            document.getElementById('viewerWebsiteTitle').textContent = cred.website;
+            document.getElementById('viewerWebsiteName').textContent = cred.website;
+            document.getElementById('viewerFavicon').src = 'https://www.google.com/s2/favicons?sz=64&domain=' + cred.website;
+            document.getElementById('viewerUsername').value = cred.username;
+            document.getElementById('viewerPassword').value = cred.password;
+        }
+
+        function randomString(length) {
+            const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+        function getDemoCredentials() {
+            return [
+                { website: 'DemoSite1', username: randomString(8), password: randomString(12) },
+                { website: 'DemoSite2', username: randomString(7), password: randomString(10) },
+                { website: 'DemoSite3', username: randomString(9), password: randomString(14) },
+            ];
+        }
+        function renderAllPasswordsListView(creds) {
+            const container = document.getElementById('allPasswordsListView');
+            container.innerHTML = '';
+            const list = document.createElement('div');
+            list.className = 'all-passwords-list';
+            creds.forEach(cred => {
+                const row = document.createElement('div');
+                row.className = 'all-passwords-list-row';
+                row.innerHTML = `
+                    <span><b>${cred.website}</b></span>
+                    <span>${cred.username}</span>
+                    <span>${cred.password}</span>
+                `;
+                list.appendChild(row);
+            });
+            container.appendChild(list);
+        }
+        function renderAllPasswordsGridView(creds) {
+            const container = document.getElementById('allPasswordsGridView');
+            container.innerHTML = '';
+            const grid = document.createElement('div');
+            grid.className = 'all-passwords-grid';
+            creds.forEach(cred => {
+                const card = document.createElement('div');
+                card.className = 'all-passwords-grid-card';
+                card.innerHTML = `
+                    <div class="website">${cred.website}</div>
+                    <div class="username">${cred.username}</div>
+                    <div class="password">${cred.password}</div>
+                `;
+                grid.appendChild(card);
+            });
+            container.appendChild(grid);
+        }
+        function showAllPasswords() {
+            allPasswordsMode = true;
+            document.getElementById('addFormSection').style.display = 'none';
+            document.getElementById('passwordViewerSection').style.display = 'none';
+            document.getElementById('backBtn').style.display = 'none';
+            document.getElementById('viewOptionsBar').style.display = 'flex';
+            document.getElementById('allPasswordsSection').style.display = 'block';
+            let creds = (credentials && credentials.length) ? credentials : getDemoCredentials();
+            if (!creds || creds.length === 0) {
+                document.getElementById('allPasswordsListView').innerHTML = '<div style="text-align:center;margin-top:40px;color:#fff;">No passwords to display.</div>';
+                document.getElementById('allPasswordsListView').style.display = 'block';
+                document.getElementById('allPasswordsGridView').style.display = 'none';
+                setListView.activeCreds = [];
+            } else {
+                renderAllPasswordsListView(creds);
+                document.getElementById('allPasswordsListView').style.display = 'block';
+                document.getElementById('allPasswordsGridView').style.display = 'none';
+                setListView.activeCreds = creds;
+            }
+        }
+        function setListView() {
+            currentView = 'list';
+            document.getElementById('viewOptionsBar').style.display = 'flex';
+            document.getElementById('listViewBtn').classList.add('active');
+            document.getElementById('gridViewBtn').classList.remove('active');
+            document.getElementById('allPasswordsListView').style.display = 'block';
+            document.getElementById('allPasswordsGridView').style.display = 'none';
+            renderAllPasswordsListView(setListView.activeCreds || credentials);
+        }
+        function setGridView() {
+            currentView = 'grid';
+            document.getElementById('viewOptionsBar').style.display = 'flex';
+            document.getElementById('listViewBtn').classList.remove('active');
+            document.getElementById('gridViewBtn').classList.add('active');
+            document.getElementById('allPasswordsListView').style.display = 'none';
+            document.getElementById('allPasswordsGridView').style.display = 'block';
+            renderAllPasswordsGridView(setListView.activeCreds || credentials);
+        }
     </script>
 </body>
+
 </html>
