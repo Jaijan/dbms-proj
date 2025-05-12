@@ -15,12 +15,16 @@
         html, body {
             height: 100%;
             width: 100%;
-            background-color: #000;
             color: #fff;
             font-family: 'Orbitron', sans-serif;
         }
 
         body {
+            min-height: 100vh;
+            min-width: 100vw;
+            background: radial-gradient(ellipse 60% 50% at 80% 60%, rgba(196,113,245,0.35) 0%, rgba(250,113,205,0.25) 40%, #1a1017 80%, #0a070a 100%);
+            /* fallback for browsers that don't support gradients */
+            background-color: #1a1017;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -138,6 +142,102 @@
         .visible {
             display: block !important;
         }
+
+        .my-passwords-btn {
+            position: absolute;
+            bottom: 40px;
+            right: 60px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1em;
+            letter-spacing: 2px;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.3s, color 0.3s;
+        }
+        .my-passwords-btn:hover {
+            opacity: 1;
+            color: #ffb6ff;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1em;
+            letter-spacing: 1px;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.3s, color 0.3s;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .back-btn:hover {
+            opacity: 1;
+            color: #ffb6ff;
+        }
+
+        .password-viewer-centered {
+            justify-content: center;
+            align-items: center;
+        }
+        .viewer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 320px;
+            width: 100%;
+        }
+        .viewer-arrow.left {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .viewer-arrow.right {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .main-logo-display {
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            margin-top: 10px;
+        }
+        .main-logo-display img {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+        }
+        .main-logo-display span {
+            font-size: 2.2em;
+            margin-left: 20px;
+            letter-spacing: 3px;
+        }
+        .generate-btn {
+            margin-top: 5px;
+            background: #c471f5;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s;
+        }
+        .generate-btn:hover {
+            background: #fa71cd;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -148,7 +248,6 @@
             <i class="fas fa-user-circle"></i>
         </button>
         <form class="profile-form" method="POST" id="profileForm">
-            {% csrf_token %}
             <input type="text" name="name" placeholder="Enter your name" required><br>
             <input type="password" name="pin" placeholder="4-digit PIN" maxlength="4" required><br>
             <button type="submit">Switch User</button>
@@ -156,14 +255,15 @@
     </div>
 
     <!-- Fullscreen Form Layout -->
-    <div class="main-wrapper">
-        <button class="arrow-btn" onclick="prev()"><i class="fas fa-chevron-left"></i></button>
-
+    <div class="main-wrapper" id="addFormSection">
         <div>
+            <div class="website-display main-logo-display">
+                <img src="https://www.google.com/s2/favicons?sz=64&domain=example.com" id="favicon" alt="favicon">
+                <span id="websiteName">example.com</span>
+            </div>
             <h2>Password Management System</h2>
-
             <form method="POST">
-                {% csrf_token %}
+                <!--{% csrf_token %} -->
                 <input list="websites" name="website" placeholder="Website Name / URL" id="websiteInput" required>
                 <datalist id="websites">
                     <option value="Google">
@@ -175,25 +275,40 @@
                     <option value="Netflix">
                     <option value="Amazon">
                 </datalist>
-
                 <input type="text" name="username" placeholder="Username" required>
                 <input type="password" name="password" id="password" placeholder="Password" required>
-
+                <button type="button" class="generate-btn" onclick="generatePassword()">Generate Password</button>
                 <button type="submit">Save Credential</button>
             </form>
+        </div>
+    </div>
 
-            <button class="copy-btn" onclick="copyPassword()">
-                <i class="fas fa-copy"></i> Copy Password
-            </button>
-
-            <div class="website-display" id="websiteDisplay">
-                <img src="https://www.google.com/s2/favicons?domain=example.com" id="favicon" alt="favicon">
-                <span id="websiteName">example.com</span>
+    <!-- Password Viewer Layout (hidden by default) -->
+    <div class="main-wrapper password-viewer-centered" id="passwordViewerSection" style="display:none; position: relative;">
+        <button class="arrow-btn viewer-arrow left" onclick="prevPassword()"><i class="fas fa-chevron-left"></i></button>
+        <div class="viewer-content">
+            <div class="website-display" style="margin-bottom: 30px; justify-content: center;">
+                <img src="https://www.google.com/s2/favicons?sz=64&domain=example.com" id="viewerFavicon" alt="favicon">
+                <span id="viewerWebsiteName">example.com</span>
+            </div>
+            <div style="margin-bottom: 20px; text-align: center;">
+                <div style="margin-bottom: 8px;">USERNAME</div>
+                <input type="text" id="viewerUsername" value="demo_user" readonly style="width:100%;margin-bottom:5px;text-align:center;">
+                <button class="copy-btn" onclick="copyViewerUsername()">COPY USERNAME</button>
+            </div>
+            <div style="text-align: center;">
+                <div style="margin-bottom: 8px;">PASSWORD</div>
+                <input type="text" id="viewerPassword" value="demo_pass" readonly style="width:100%;margin-bottom:5px;text-align:center;">
+                <button class="copy-btn" onclick="copyViewerPassword()">COPY PASSWORD</button>
             </div>
         </div>
-
-        <button class="arrow-btn" onclick="next()"><i class="fas fa-chevron-right"></i></button>
+        <button class="arrow-btn viewer-arrow right" onclick="nextPassword()"><i class="fas fa-chevron-right"></i></button>
     </div>
+    <!-- Back Button for Password Viewer (top left of page) -->
+    <button class="back-btn" id="backBtn" style="display:none;" onclick="showAddForm()"><i class="fas fa-arrow-left"></i> Back</button>
+
+    <!-- MY PASSWORDS Button -->
+    <button class="my-passwords-btn" id="myPasswordsBtn" onclick="showPasswords()">MY PASSWORDS</button>
 
     <script>
         function copyPassword() {
@@ -219,7 +334,7 @@
             input.addEventListener('input', () => {
                 const url = input.value;
                 const domain = url.toLowerCase().includes('.') ? url : url + ".com";
-                favicon.src = "https://www.google.com/s2/favicons?domain=" + domain;
+                favicon.src = "https://www.google.com/s2/favicons?sz=64&domain=" + domain;
                 nameDisplay.textContent = url;
             });
         }
@@ -233,6 +348,53 @@
         }
 
         updateFavicon();
+
+        // Show Passwords UI
+        function showPasswords() {
+            document.getElementById('addFormSection').style.display = 'none';
+            document.getElementById('passwordViewerSection').style.display = 'flex';
+            document.getElementById('myPasswordsBtn').style.display = 'none';
+            document.getElementById('backBtn').style.display = 'flex';
+        }
+        // Return to Add Form UI
+        function showAddForm() {
+            document.getElementById('addFormSection').style.display = 'flex';
+            document.getElementById('passwordViewerSection').style.display = 'none';
+            document.getElementById('myPasswordsBtn').style.display = 'block';
+            document.getElementById('backBtn').style.display = 'none';
+        }
+        // Copy functions for viewer
+        function copyViewerUsername() {
+            const username = document.getElementById('viewerUsername').value;
+            navigator.clipboard.writeText(username).then(() => alert('Username copied!'));
+        }
+        function copyViewerPassword() {
+            const password = document.getElementById('viewerPassword').value;
+            navigator.clipboard.writeText(password).then(() => alert('Password copied!'));
+        }
+        // Navigation for viewer (placeholder)
+        function prevPassword() {
+            alert('Previous password (to be implemented)');
+        }
+        function nextPassword() {
+            alert('Next password (to be implemented)');
+        }
+        // Optionally, add a way to return to add form (e.g., ESC key or a button)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') showAddForm();
+        });
+        function generatePassword() {
+            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
+            let password = "";
+            for (let i = 0, n = charset.length; i < 16; ++i) {
+                password += charset.charAt(Math.floor(Math.random() * n));
+            }
+            const passwordField = document.getElementById("password");
+            passwordField.value = password;
+            navigator.clipboard.writeText(password).then(() => {
+                alert("Password generated and copied!");
+            });
+        }
     </script>
 </body>
 </html>
