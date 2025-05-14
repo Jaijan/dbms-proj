@@ -376,6 +376,9 @@
             <input type="password" name="pin" placeholder="4-digit PIN" maxlength="4" required><br>
             <button type="submit">Switch User</button>
         </form>
+        <a href="{% url 'signout' %}" class="signout-btn" id="signoutBtn" style="color: #fff; text-decoration: none; margin-left: 20px;">
+            <i class="fas fa-sign-out-alt"></i> Sign Out
+        </a>
     </div>
 
     <!-- Menu Bar (top left) -->
@@ -393,7 +396,7 @@
             </div>
             <h2>Password Management System</h2>
             <form method="POST">
-                <!--{% csrf_token %} -->
+                {% csrf_token %}
                 <input list="websites" name="website" placeholder="Website Name / URL" id="websiteInput" required>
                 <datalist id="websites">
                     <option value="Google">
@@ -453,6 +456,9 @@
     </div>
 
     <!-- Credentials JSON for JS (hidden, for JS only) -->
+    <script id="credentials-data" type="application/json">
+        {{ credentials|safe }}
+    </script>
 
     <script>
         function copyPassword() {
@@ -493,58 +499,8 @@
 
         updateFavicon();
 
-        // Show Passwords UI
-        function showPasswords() {
-            document.getElementById('addFormSection').style.display = 'none';
-            document.getElementById('passwordViewerSection').style.display = 'flex';
-            document.getElementById('backBtn').style.display = 'block';
-            document.getElementById('viewOptionsBar').style.display = 'none';
-            document.getElementById('allPasswordsSection').style.display = 'none';
-            updateViewer();
-        }
-        // Return to Add Form UI
-        function showAddForm() {
-            document.getElementById('addFormSection').style.display = 'flex';
-            document.getElementById('passwordViewerSection').style.display = 'none';
-            document.getElementById('backBtn').style.display = 'none';
-            document.getElementById('viewOptionsBar').style.display = 'none';
-            document.getElementById('allPasswordsSection').style.display = 'none';
-        }
-        // Copy functions for viewer
-        function copyViewerUsername() {
-            const username = document.getElementById('viewerUsername').value;
-            navigator.clipboard.writeText(username).then(() => alert('Username copied!'));
-        }
-        function copyViewerPassword() {
-            const password = document.getElementById('viewerPassword').value;
-            navigator.clipboard.writeText(password).then(() => alert('Password copied!'));
-        }
-        // Navigation for viewer (placeholder)
-        function prevPassword() {
-            alert('Previous password (to be implemented)');
-        }
-        function nextPassword() {
-            alert('Next password (to be implemented)');
-        }
-        // Optionally, add a way to return to add form (e.g., ESC key or a button)
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') showAddForm();
-        });
-        function generatePassword() {
-            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
-            let password = "";
-            for (let i = 0, n = charset.length; i < 16; ++i) {
-                password += charset.charAt(Math.floor(Math.random() * n));
-            }
-            const passwordField = document.getElementById("password");
-            passwordField.value = password;
-            navigator.clipboard.writeText(password).then(() => {
-                alert("Password generated and copied!");
-            });
-        }
-
-        // Credentials from backend
-        var credentials = JSON.parse(document.getElementById('credentials-data').textContent);
+        // Initialize credentials from backend
+        var credentials = JSON.parse(document.getElementById('credentials-data').textContent || '[]');
         var currentIndex = 0;
         var allPasswordsMode = false;
         var currentView = 'list';
@@ -574,25 +530,54 @@
             }
             return result;
         }
-        function getDemoCredentials() {
-            return [
-                { website: 'DemoSite1', username: randomString(8), password: randomString(12) },
-                { website: 'DemoSite2', username: randomString(7), password: randomString(10) },
-                { website: 'DemoSite3', username: randomString(9), password: randomString(14) },
-            ];
+        function showAllPasswords() {
+            allPasswordsMode = true;
+            document.getElementById('addFormSection').style.display = 'none';
+            document.getElementById('passwordViewerSection').style.display = 'none';
+            document.getElementById('backBtn').style.display = 'none';
+            document.getElementById('viewOptionsBar').style.display = 'flex';
+            document.getElementById('allPasswordsSection').style.display = 'block';
+            document.getElementById('signoutBtn').style.display = 'none';
+            
+            if (!credentials || credentials.length === 0) {
+                const noPasswordsMessage = `
+                    <div style="text-align: center; margin-top: 100px; color: #fff; font-size: 1.5em;">
+                        <i class="fas fa-lock" style="font-size: 2em; margin-bottom: 20px;"></i>
+                        <p>No passwords stored yet</p>
+                        <p style="font-size: 0.8em; margin-top: 10px; color: #c471f5;">Add your first password using the form</p>
+                    </div>
+                `;
+                document.getElementById('allPasswordsListView').innerHTML = noPasswordsMessage;
+                document.getElementById('allPasswordsListView').style.display = 'block';
+                document.getElementById('allPasswordsGridView').style.display = 'none';
+            } else {
+                renderAllPasswordsListView(credentials);
+                document.getElementById('allPasswordsListView').style.display = 'block';
+                document.getElementById('allPasswordsGridView').style.display = 'none';
+            }
         }
         function renderAllPasswordsListView(creds) {
             const container = document.getElementById('allPasswordsListView');
             container.innerHTML = '';
             const list = document.createElement('div');
             list.className = 'all-passwords-list';
-            creds.forEach(cred => {
+            creds.forEach((cred, index) => {
                 const row = document.createElement('div');
                 row.className = 'all-passwords-list-row';
                 row.innerHTML = `
                     <span><b>${cred.website}</b></span>
-                    <span>${cred.username}</span>
-                    <span>${cred.password}</span>
+                    <span>
+                        ${cred.username}
+                        <button class="copy-btn" onclick="copyToClipboard('${cred.username}')" style="margin-left: 10px;">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </span>
+                    <span>
+                        ${cred.password}
+                        <button class="copy-btn" onclick="copyToClipboard('${cred.password}')" style="margin-left: 10px;">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </span>
                 `;
                 list.appendChild(row);
             });
@@ -608,32 +593,27 @@
                 card.className = 'all-passwords-grid-card';
                 card.innerHTML = `
                     <div class="website">${cred.website}</div>
-                    <div class="username">${cred.username}</div>
-                    <div class="password">${cred.password}</div>
+                    <div class="username">
+                        ${cred.username}
+                        <button class="copy-btn" onclick="copyToClipboard('${cred.username}')" style="margin-left: 10px;">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    <div class="password">
+                        ${cred.password}
+                        <button class="copy-btn" onclick="copyToClipboard('${cred.password}')" style="margin-left: 10px;">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
                 `;
                 grid.appendChild(card);
             });
             container.appendChild(grid);
         }
-        function showAllPasswords() {
-            allPasswordsMode = true;
-            document.getElementById('addFormSection').style.display = 'none';
-            document.getElementById('passwordViewerSection').style.display = 'none';
-            document.getElementById('backBtn').style.display = 'none';
-            document.getElementById('viewOptionsBar').style.display = 'flex';
-            document.getElementById('allPasswordsSection').style.display = 'block';
-            let creds = (credentials && credentials.length) ? credentials : getDemoCredentials();
-            if (!creds || creds.length === 0) {
-                document.getElementById('allPasswordsListView').innerHTML = '<div style="text-align:center;margin-top:40px;color:#fff;">No passwords to display.</div>';
-                document.getElementById('allPasswordsListView').style.display = 'block';
-                document.getElementById('allPasswordsGridView').style.display = 'none';
-                setListView.activeCreds = [];
-            } else {
-                renderAllPasswordsListView(creds);
-                document.getElementById('allPasswordsListView').style.display = 'block';
-                document.getElementById('allPasswordsGridView').style.display = 'none';
-                setListView.activeCreds = creds;
-            }
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text)
+                .then(() => alert('Copied to clipboard!'))
+                .catch(err => alert('Failed to copy!'));
         }
         function setListView() {
             currentView = 'list';
@@ -642,7 +622,19 @@
             document.getElementById('gridViewBtn').classList.remove('active');
             document.getElementById('allPasswordsListView').style.display = 'block';
             document.getElementById('allPasswordsGridView').style.display = 'none';
-            renderAllPasswordsListView(setListView.activeCreds || credentials);
+            
+            if (!credentials || credentials.length === 0) {
+                const noPasswordsMessage = `
+                    <div style="text-align: center; margin-top: 100px; color: #fff; font-size: 1.5em;">
+                        <i class="fas fa-lock" style="font-size: 2em; margin-bottom: 20px;"></i>
+                        <p>No passwords stored yet</p>
+                        <p style="font-size: 0.8em; margin-top: 10px; color: #c471f5;">Add your first password using the form</p>
+                    </div>
+                `;
+                document.getElementById('allPasswordsListView').innerHTML = noPasswordsMessage;
+            } else {
+                renderAllPasswordsListView(credentials);
+            }
         }
         function setGridView() {
             currentView = 'grid';
@@ -651,7 +643,74 @@
             document.getElementById('gridViewBtn').classList.add('active');
             document.getElementById('allPasswordsListView').style.display = 'none';
             document.getElementById('allPasswordsGridView').style.display = 'block';
-            renderAllPasswordsGridView(setListView.activeCreds || credentials);
+            
+            if (!credentials || credentials.length === 0) {
+                const noPasswordsMessage = `
+                    <div style="text-align: center; margin-top: 100px; color: #fff; font-size: 1.5em;">
+                        <i class="fas fa-lock" style="font-size: 2em; margin-bottom: 20px;"></i>
+                        <p>No passwords stored yet</p>
+                        <p style="font-size: 0.8em; margin-top: 10px; color: #c471f5;">Add your first password using the form</p>
+                    </div>
+                `;
+                document.getElementById('allPasswordsGridView').innerHTML = noPasswordsMessage;
+            } else {
+                renderAllPasswordsGridView(credentials);
+            }
+        }
+        // Show Passwords UI
+        function showPasswords() {
+            document.getElementById('addFormSection').style.display = 'none';
+            document.getElementById('passwordViewerSection').style.display = 'flex';
+            document.getElementById('backBtn').style.display = 'block';
+            document.getElementById('viewOptionsBar').style.display = 'none';
+            document.getElementById('allPasswordsSection').style.display = 'none';
+            document.getElementById('signoutBtn').style.display = 'none';
+            updateViewer();
+        }
+        // Return to Add Form UI
+        function showAddForm() {
+            document.getElementById('addFormSection').style.display = 'flex';
+            document.getElementById('passwordViewerSection').style.display = 'none';
+            document.getElementById('backBtn').style.display = 'none';
+            document.getElementById('viewOptionsBar').style.display = 'none';
+            document.getElementById('allPasswordsSection').style.display = 'none';
+            document.getElementById('signoutBtn').style.display = 'inline-block';
+        }
+        // Copy functions for viewer
+        function copyViewerUsername() {
+            const username = document.getElementById('viewerUsername').value;
+            navigator.clipboard.writeText(username).then(() => alert('Username copied!'));
+        }
+        function copyViewerPassword() {
+            const password = document.getElementById('viewerPassword').value;
+            navigator.clipboard.writeText(password).then(() => alert('Password copied!'));
+        }
+        // Navigation for viewer (placeholder)
+        function prevPassword() {
+            if (credentials.length === 0) return;
+            currentIndex = (currentIndex - 1 + credentials.length) % credentials.length;
+            updateViewer();
+        }
+        function nextPassword() {
+            if (credentials.length === 0) return;
+            currentIndex = (currentIndex + 1) % credentials.length;
+            updateViewer();
+        }
+        // Optionally, add a way to return to add form (e.g., ESC key or a button)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') showAddForm();
+        });
+        function generatePassword() {
+            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
+            let password = "";
+            for (let i = 0, n = charset.length; i < 16; ++i) {
+                password += charset.charAt(Math.floor(Math.random() * n));
+            }
+            const passwordField = document.getElementById("password");
+            passwordField.value = password;
+            navigator.clipboard.writeText(password).then(() => {
+                alert("Password generated and copied!");
+            });
         }
     </script>
 </body>

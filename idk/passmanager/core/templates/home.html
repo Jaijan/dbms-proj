@@ -1,0 +1,400 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <!-- Add Password Form Section -->
+    <div id="addFormSection" class="section">
+        <h2>Add New Password</h2>
+        <form method="POST" action="{% url 'home' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="website">Website</label>
+                <input type="text" id="website" name="website" required>
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn">Save Password</button>
+        </form>
+    </div>
+
+    <!-- Password Viewer Section -->
+    <div id="passwordViewerSection" class="section">
+        <h2>Password Viewer</h2>
+        <div class="password-viewer">
+            <div class="viewer-header">
+                <img id="viewerFavicon" src="" alt="Website Icon">
+                <h3 id="viewerWebsiteTitle">Select a website</h3>
+            </div>
+            <div class="viewer-content">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="viewerUsername" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="viewerPassword" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- All Passwords Section -->
+    <div id="allPasswordsSection" class="section" style="display: none;">
+        <div id="viewOptionsBar" class="view-options">
+            <button onclick="toggleView('list')" class="btn">List View</button>
+            <button onclick="toggleView('grid')" class="btn">Grid View</button>
+        </div>
+        <div id="allPasswordsListView" class="view-content"></div>
+        <div id="allPasswordsGridView" class="view-content" style="display: none;"></div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons">
+        <button id="backBtn" onclick="goBack()" class="btn" style="display: none;">Back</button>
+        <button onclick="showAllPasswords()" class="btn">View All Passwords</button>
+        <a href="{% url 'signout' %}" class="btn" id="signoutBtn">Sign Out</a>
+    </div>
+</div>
+
+<!-- Hidden credentials data -->
+<div id="credentials-data" style="display: none;">{{ credentials|safe }}</div>
+
+<script>
+    // Initialize credentials from backend
+    var credentials = JSON.parse(document.getElementById('credentials-data').textContent);
+    console.log('Initial credentials:', credentials);
+    var currentIndex = 0;
+    var allPasswordsMode = false;
+    var currentView = 'list';
+
+    // Load credentials when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Page loaded, initializing...');
+        updateViewer();
+        renderAllPasswordsListView(credentials);
+        renderAllPasswordsGridView(credentials);
+    });
+
+    function updateViewer() {
+        console.log('Updating viewer with credentials:', credentials);
+        if (credentials.length === 0) {
+            console.log('No credentials to display');
+            document.getElementById('viewerWebsiteTitle').textContent = 'No credentials';
+            document.getElementById('viewerWebsiteName').textContent = '';
+            document.getElementById('viewerFavicon').src = 'https://www.google.com/s2/favicons?sz=64&domain=example.com';
+            document.getElementById('viewerUsername').value = '';
+            document.getElementById('viewerPassword').value = '';
+            return;
+        }
+        const cred = credentials[currentIndex];
+        console.log('Displaying credential:', cred);
+        document.getElementById('viewerWebsiteTitle').textContent = cred.website;
+        document.getElementById('viewerWebsiteName').textContent = cred.website;
+        document.getElementById('viewerFavicon').src = 'https://www.google.com/s2/favicons?sz=64&domain=' + cred.website;
+        document.getElementById('viewerUsername').value = cred.username;
+        document.getElementById('viewerPassword').value = cred.password;
+    }
+
+    function renderAllPasswordsListView(creds) {
+        console.log('Rendering list view with credentials:', creds);
+        const container = document.getElementById('allPasswordsListView');
+        container.innerHTML = '';
+        const list = document.createElement('div');
+        list.className = 'all-passwords-list';
+        creds.forEach((cred, index) => {
+            console.log('Rendering list item:', cred);
+            const row = document.createElement('div');
+            row.className = 'all-passwords-list-row';
+            row.innerHTML = `
+                <span><b>${cred.website}</b></span>
+                <span>
+                    ${cred.username}
+                    <button class="copy-btn" onclick="copyToClipboard('${cred.username}')" style="margin-left: 10px;">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </span>
+                <span>
+                    <span class="password-text" id="pwd-${cred.website}" data-password="${cred.password}">••••••••</span>
+                    <button class="copy-btn" onclick="copyPassword('${cred.website}')" style="margin-left: 10px;">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button class="toggle-btn" onclick="togglePassword('${cred.website}')" style="margin-left: 10px;">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </span>
+            `;
+            list.appendChild(row);
+        });
+        container.appendChild(list);
+    }
+
+    function renderAllPasswordsGridView(creds) {
+        console.log('Rendering grid view with credentials:', creds);
+        const container = document.getElementById('allPasswordsGridView');
+        container.innerHTML = '';
+        const grid = document.createElement('div');
+        grid.className = 'all-passwords-grid';
+        creds.forEach(cred => {
+            console.log('Rendering grid item:', cred);
+            const card = document.createElement('div');
+            card.className = 'all-passwords-grid-card';
+            card.innerHTML = `
+                <div class="website">${cred.website}</div>
+                <div class="username">
+                    ${cred.username}
+                    <button class="copy-btn" onclick="copyToClipboard('${cred.username}')" style="margin-left: 10px;">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+                <div class="password">
+                    <span class="password-text" id="pwd-${cred.website}" data-password="${cred.password}">••••••••</span>
+                    <button class="copy-btn" onclick="copyPassword('${cred.website}')" style="margin-left: 10px;">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button class="toggle-btn" onclick="togglePassword('${cred.website}')" style="margin-left: 10px;">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+        container.appendChild(grid);
+    }
+
+    function toggleView(view) {
+        console.log('Toggling view to:', view);
+        currentView = view;
+        if (view === 'list') {
+            document.getElementById('allPasswordsListView').style.display = 'block';
+            document.getElementById('allPasswordsGridView').style.display = 'none';
+        } else {
+            document.getElementById('allPasswordsListView').style.display = 'none';
+            document.getElementById('allPasswordsGridView').style.display = 'block';
+        }
+    }
+
+    function goBack() {
+        console.log('Going back to main view');
+        allPasswordsMode = false;
+        document.getElementById('addFormSection').style.display = 'block';
+        document.getElementById('passwordViewerSection').style.display = 'block';
+        document.getElementById('backBtn').style.display = 'none';
+        document.getElementById('viewOptionsBar').style.display = 'none';
+        document.getElementById('allPasswordsSection').style.display = 'none';
+        document.getElementById('signoutBtn').style.display = 'block';
+    }
+
+    function showAllPasswords() {
+        console.log('Showing all passwords');
+        allPasswordsMode = true;
+        document.getElementById('addFormSection').style.display = 'none';
+        document.getElementById('passwordViewerSection').style.display = 'none';
+        document.getElementById('backBtn').style.display = 'block';
+        document.getElementById('viewOptionsBar').style.display = 'flex';
+        document.getElementById('allPasswordsSection').style.display = 'block';
+        document.getElementById('signoutBtn').style.display = 'none';
+        
+        if (!credentials || credentials.length === 0) {
+            const noPasswordsMessage = `
+                <div style="text-align: center; margin-top: 100px; color: #fff; font-size: 1.5em;">
+                    <i class="fas fa-lock" style="font-size: 2em; margin-bottom: 20px;"></i>
+                    <p>No passwords stored yet</p>
+                    <p style="font-size: 0.8em; margin-top: 10px; color: #c471f5;">Add your first password using the form</p>
+                </div>
+            `;
+            document.getElementById('allPasswordsListView').innerHTML = noPasswordsMessage;
+            document.getElementById('allPasswordsGridView').innerHTML = noPasswordsMessage;
+        } else {
+            renderAllPasswordsListView(credentials);
+            renderAllPasswordsGridView(credentials);
+        }
+    }
+
+    function togglePassword(website) {
+        console.log('Toggling password visibility for:', website);
+        const passwordElements = document.querySelectorAll(`#pwd-${website}`);
+        passwordElements.forEach(el => {
+            const isHidden = el.textContent === '••••••••';
+            const actualPassword = el.getAttribute('data-password');
+            if (actualPassword) {
+                el.textContent = isHidden ? actualPassword : '••••••••';
+                
+                // Update the eye icon
+                const toggleBtn = el.closest('.password-item, .all-passwords-list-row, .all-passwords-grid-card').querySelector('.toggle-btn i');
+                if (toggleBtn) {
+                    toggleBtn.className = isHidden ? 'fas fa-eye-slash' : 'fas fa-eye';
+                }
+            }
+        });
+    }
+
+    function copyPassword(website) {
+        console.log('Copying password for:', website);
+        const passwordElements = document.querySelectorAll(`#pwd-${website}`);
+        const actualPassword = passwordElements[0].getAttribute('data-password');
+        if (actualPassword) {
+            navigator.clipboard.writeText(actualPassword).then(() => {
+                // Show copy feedback
+                const copyBtns = document.querySelectorAll('.copy-btn i');
+                copyBtns.forEach(btn => {
+                    if (btn.closest('button').onclick.toString().includes(website)) {
+                        btn.className = 'fas fa-check';
+                        setTimeout(() => {
+                            btn.className = 'fas fa-copy';
+                        }, 2000);
+                    }
+                });
+            });
+        }
+    }
+
+    function copyToClipboard(text) {
+        console.log('Copying to clipboard:', text);
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                // Show copy feedback
+                const copyBtns = document.querySelectorAll('.copy-btn i');
+                copyBtns.forEach(btn => {
+                    if (btn.closest('button').onclick.toString().includes(text)) {
+                        btn.className = 'fas fa-check';
+                        setTimeout(() => {
+                            btn.className = 'fas fa-copy';
+                        }, 2000);
+                    }
+                });
+            })
+            .catch(err => alert('Failed to copy!'));
+    }
+</script>
+
+<style>
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.section {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.btn {
+    background: #c471f5;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.btn:hover {
+    background: #b35ee0;
+}
+
+.password-viewer {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.viewer-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.viewer-header img {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+
+.view-options {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.all-passwords-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.all-passwords-list-row {
+    display: grid;
+    grid-template-columns: 2fr 2fr 3fr;
+    gap: 10px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 5px;
+    align-items: center;
+}
+
+.all-passwords-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.all-passwords-grid-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.all-passwords-grid-card .website {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.copy-btn, .toggle-btn {
+    background: none;
+    border: none;
+    color: #c471f5;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.copy-btn:hover, .toggle-btn:hover {
+    color: #b35ee0;
+}
+</style>
+{% endblock %} 
