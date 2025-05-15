@@ -68,8 +68,15 @@
 
 <script>
     // Initialize credentials from backend
-    var credentials = JSON.parse(document.getElementById('credentials-data').textContent);
-    console.log('Initial credentials:', credentials);
+    var credentials = [];
+    try {
+        const credentialsData = document.getElementById('credentials-data').textContent;
+        console.log('Raw credentials data:', credentialsData);
+        credentials = JSON.parse(credentialsData);
+        console.log('Parsed credentials:', credentials);
+    } catch (error) {
+        console.error('Error parsing credentials:', error);
+    }
     var currentIndex = 0;
     var allPasswordsMode = false;
     var currentView = 'list';
@@ -77,9 +84,13 @@
     // Load credentials when the page loads
     document.addEventListener('DOMContentLoaded', function() {
         console.log('Page loaded, initializing...');
-        updateViewer();
-        renderAllPasswordsListView(credentials);
-        renderAllPasswordsGridView(credentials);
+        if (credentials && credentials.length > 0) {
+            console.log('Rendering initial credentials:', credentials);
+            renderAllPasswordsListView(credentials);
+            renderAllPasswordsGridView(credentials);
+        } else {
+            console.log('No credentials found');
+        }
     });
 
     function updateViewer() {
@@ -103,32 +114,30 @@
     }
 
     function renderAllPasswordsListView(creds) {
-        console.log('Rendering list view with credentials:', creds);
         const container = document.getElementById('allPasswordsListView');
         container.innerHTML = '';
         const list = document.createElement('div');
         list.className = 'all-passwords-list';
         creds.forEach((cred, index) => {
-            console.log('Rendering list item:', cred);
             const row = document.createElement('div');
             row.className = 'all-passwords-list-row';
             row.innerHTML = `
                 <span><b>${cred.website}</b></span>
                 <span>
                     ${cred.username}
-                    <button class="copy-btn" onclick="copyToClipboard('${cred.username}')" style="margin-left: 10px;">
+                    <button class="copy-btn" onclick="copyToClipboard('${cred.username}')" title="Copy Username">
                         <i class="fas fa-copy"></i>
                     </button>
                 </span>
                 <span>
-                    <span class="password-text" id="pwd-${cred.website}" data-password="${cred.password}">••••••••</span>
-                    <button class="copy-btn" onclick="copyPassword('${cred.website}')" style="margin-left: 10px;">
+                    <span class="password-text" data-password="${cred.password}">••••••••</span>
+                    <button class="copy-btn" onclick="copyPassword('${cred.website}')" title="Copy Password" style="margin-left: 10px;">
                         <i class="fas fa-copy"></i>
                     </button>
-                    <button class="toggle-btn" onclick="togglePassword('${cred.website}')" style="margin-left: 10px;">
-                        <i class="fas fa-eye"></i>
-                    </button>
                 </span>
+                <button class="delete-btn" onclick="deletePassword('${cred.website}')" title="Delete">
+                    <i class="fas fa-trash"></i>
+                </button>
             `;
             list.appendChild(row);
         });
@@ -136,32 +145,30 @@
     }
 
     function renderAllPasswordsGridView(creds) {
-        console.log('Rendering grid view with credentials:', creds);
         const container = document.getElementById('allPasswordsGridView');
         container.innerHTML = '';
         const grid = document.createElement('div');
         grid.className = 'all-passwords-grid';
         creds.forEach(cred => {
-            console.log('Rendering grid item:', cred);
             const card = document.createElement('div');
             card.className = 'all-passwords-grid-card';
             card.innerHTML = `
-                <div class="website">${cred.website}</div>
+                <div class="website"><b>${cred.website}</b></div>
                 <div class="username">
                     ${cred.username}
-                    <button class="copy-btn" onclick="copyToClipboard('${cred.username}')" style="margin-left: 10px;">
+                    <button class="copy-btn" onclick="copyToClipboard('${cred.username}')" title="Copy Username" style="margin-left: 10px;">
                         <i class="fas fa-copy"></i>
                     </button>
                 </div>
                 <div class="password">
-                    <span class="password-text" id="pwd-${cred.website}" data-password="${cred.password}">••••••••</span>
-                    <button class="copy-btn" onclick="copyPassword('${cred.website}')" style="margin-left: 10px;">
+                    <span class="password-text" data-password="${cred.password}">••••••••</span>
+                    <button class="copy-btn" onclick="copyPassword('${cred.website}')" title="Copy Password" style="margin-left: 10px;">
                         <i class="fas fa-copy"></i>
                     </button>
-                    <button class="toggle-btn" onclick="togglePassword('${cred.website}')" style="margin-left: 10px;">
-                        <i class="fas fa-eye"></i>
-                    </button>
                 </div>
+                <button class="delete-btn" onclick="deletePassword('${cred.website}')" title="Delete" style="position: absolute; top: 10px; right: 10px;">
+                    <i class="fas fa-trash"></i>
+                </button>
             `;
             grid.appendChild(card);
         });
@@ -217,22 +224,48 @@
         }
     }
 
-    function togglePassword(website) {
-        console.log('Toggling password visibility for:', website);
-        const passwordElements = document.querySelectorAll(`#pwd-${website}`);
-        passwordElements.forEach(el => {
-            const isHidden = el.textContent === '••••••••';
-            const actualPassword = el.getAttribute('data-password');
-            if (actualPassword) {
-                el.textContent = isHidden ? actualPassword : '••••••••';
-                
-                // Update the eye icon
-                const toggleBtn = el.closest('.password-item, .all-passwords-list-row, .all-passwords-grid-card').querySelector('.toggle-btn i');
-                if (toggleBtn) {
-                    toggleBtn.className = isHidden ? 'fas fa-eye-slash' : 'fas fa-eye';
+    function deletePassword(website) {
+        if (confirm(`Are you sure you want to delete the password for ${website}?`)) {
+            fetch('/delete_password/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ website: website })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Remove the credential from the local array
+                    credentials = credentials.filter(cred => cred.website !== website);
+                    // Re-render the views
+                    renderAllPasswordsListView(credentials);
+                    renderAllPasswordsGridView(credentials);
+                } else {
+                    alert('Failed to delete password');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to delete password');
+            });
+        }
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
                 }
             }
-        });
+        }
+        return cookieValue;
     }
 
     function copyPassword(website) {
@@ -275,126 +308,169 @@
 </script>
 
 <style>
+body {
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(ellipse 60% 50% at 80% 60%, rgba(196,113,245,0.35) 0%, rgba(250,113,205,0.25) 40%, #1a1017 80%, #0a070a 100%);
+    background-color: #1a1017;
+}
+
 .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.section {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    color: #fff;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #444;
-    border-radius: 4px;
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-}
-
-.btn {
-    background: #c471f5;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-right: 10px;
-}
-
-.btn:hover {
-    background: #b35ee0;
-}
-
-.password-viewer {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    padding: 20px;
-}
-
-.viewer-header {
+    width: 100vw;
+    min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
+    justify-content: flex-start;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
-.viewer-header img {
-    width: 32px;
-    height: 32px;
-    margin-right: 10px;
-}
-
-.view-options {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+#allPasswordsSection {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    height: calc(100vh - 200px);
+    overflow-y: auto;
+    padding-bottom: 80px;
+    position: relative;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
 }
 
 .all-passwords-list {
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 10px;
-}
-
-.all-passwords-list-row {
-    display: grid;
-    grid-template-columns: 2fr 2fr 3fr;
-    gap: 10px;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 5px;
+    padding: 20px 0;
     align-items: center;
 }
 
+.all-passwords-list-row {
+    width: 95%;
+    display: grid;
+    grid-template-columns: 2fr 2fr 3fr 0.5fr;
+    gap: 10px;
+    padding: 15px 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    align-items: center;
+    word-break: break-word;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
 .all-passwords-grid {
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
+    padding: 20px 0;
+    justify-items: center;
 }
 
 .all-passwords-grid-card {
-    background: rgba(255, 255, 255, 0.05);
+    width: 95%;
+    background: rgba(255, 255, 255, 0.08);
     border-radius: 8px;
-    padding: 15px;
+    padding: 20px;
+    word-break: break-word;
+    position: relative;
+    min-height: 150px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-.all-passwords-grid-card .website {
+.password-text {
+    display: inline-block;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    position: relative;
+    padding: 5px 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    font-family: 'Segoe UI', monospace;
+    letter-spacing: 2px;
+}
+
+.password-text::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    z-index: 1000;
+    white-space: nowrap;
+    margin-top: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.password-text:hover::after {
+    content: attr(data-password);
+    opacity: 1;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: #ff6b6b;
+    cursor: pointer;
+    padding: 5px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
     font-size: 1.2em;
-    font-weight: bold;
-    margin-bottom: 10px;
 }
 
-.nav-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+.delete-btn:hover {
+    opacity: 1;
+    color: #ff2222;
 }
 
-.copy-btn, .toggle-btn {
+.copy-btn {
     background: none;
     border: none;
     color: #c471f5;
     cursor: pointer;
     padding: 5px;
+    font-size: 1.2em;
 }
 
-.copy-btn:hover, .toggle-btn:hover {
+.copy-btn:hover {
     color: #b35ee0;
+}
+
+.view-options {
+    position: sticky;
+    top: 0;
+    background: rgba(30, 20, 40, 0.95);
+    padding: 15px 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    justify-content: center;
+}
+
+@media (max-width: 700px) {
+    .all-passwords-list-row, .all-passwords-grid-card {
+        grid-template-columns: 1fr;
+        width: 98%;
+        padding: 10px 2px;
+    }
+    #allPasswordsSection {
+        max-width: 100vw;
+        border-radius: 0;
+    }
 }
 </style>
 {% endblock %} 

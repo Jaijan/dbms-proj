@@ -2,241 +2,304 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Password Manager - Sign In</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <title>Sign In - Password Manager</title>
+    {% load static %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        html, body {
-            height: 100%;
-            width: 100%;
-            color: #fff;
-            font-family: 'Orbitron', sans-serif;
-        }
-
-        body {
             min-height: 100vh;
-            min-width: 100vw;
-            background: radial-gradient(ellipse 60% 50% at 80% 60%, rgba(196,113,245,0.35) 0%, rgba(250,113,205,0.25) 40%, #1a1017 80%, #0a070a 100%);
-            background-color: #1a1017;
-            display: flex;
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(135deg, #1e1e2f 0%, #2d2b42 100%);
+            color: #fff;
         }
-
-        .left-section {
-            flex: 1;
-            padding: 60px;
+        .split-container {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            background: rgba(196, 113, 245, 0.05);
+            min-height: 100vh;
         }
-
-        .right-section {
-            width: 400px;
-            padding: 40px;
+        .info-section {
+            flex: 1.2;
+            background: linear-gradient(120deg, #c471f5 0%, #fa71cd 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.02);
+            align-items: flex-end;
+            padding: 60px 60px 60px 40px;
+            color: #fff;
+            box-shadow: 2px 0 16px 0 rgba(0,0,0,0.08);
         }
-
-        .logo {
+        .info-content {
+            max-width: 420px;
+        }
+        .info-logo {
             display: flex;
             align-items: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
-
-        .logo img {
-            width: 48px;
-            height: 48px;
+        .info-logo img {
+            width: 56px;
+            height: 56px;
             border-radius: 12px;
+            margin-right: 18px;
         }
-
-        .logo span {
-            font-size: 1.8em;
-            margin-left: 15px;
+        .info-logo span {
+            font-family: 'Orbitron', Arial, sans-serif;
+            font-size: 2.1em;
             letter-spacing: 2px;
         }
-
-        .description {
-            font-size: 1.2em;
+        .info-title {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+        .info-desc {
+            font-size: 1.1em;
+            margin-bottom: 30px;
             line-height: 1.6;
-            margin-bottom: 40px;
-            color: rgba(255, 255, 255, 0.9);
-            max-width: 600px;
         }
-
-        .features {
+        .features-list {
             list-style: none;
+            padding: 0;
+            margin: 0;
         }
-
-        .features li {
-            margin-bottom: 20px;
+        .features-list li {
+            margin-bottom: 18px;
+            font-size: 1.08em;
             display: flex;
             align-items: center;
+        }
+        .features-list i {
+            color: #fff;
+            background: #b35ee0;
+            border-radius: 50%;
+            padding: 7px;
+            margin-right: 14px;
             font-size: 1.1em;
         }
-
-        .features i {
-            color: #c471f5;
-            margin-right: 15px;
-            font-size: 1.2em;
-        }
-
-        form {
+        .form-section {
+            flex: 1;
+            background: #181828;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 30px;
         }
-
-        h2 {
-            font-size: 1.8em;
+        .auth-box {
+            background: rgba(255,255,255,0.07);
+            border-radius: 12px;
+            padding: 38px 32px 32px 32px;
+            width: 100%;
+            max-width: 370px;
+            box-shadow: 0 2px 16px 0 rgba(0,0,0,0.10);
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.13);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px 0;
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active {
+            color: #c471f5;
+            border-bottom: 2.5px solid #c471f5;
+        }
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group label {
+            color: #fff;
+            font-size: 0.97em;
+        }
+        .form-group input {
+            padding: 11px;
+            border: 1px solid rgba(255,255,255,0.13);
+            border-radius: 6px;
+            background: rgba(255,255,255,0.09);
+            color: #fff;
+            font-size: 1em;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #c471f5;
+        }
+        .btn {
+            background: #c471f5;
+            color: white;
+            border: none;
+            padding: 13px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+        .btn:hover {
+            background: #b35ee0;
+        }
+        .messages {
+            margin-top: 18px;
+        }
+        .alert {
+            padding: 10px;
+            border-radius: 5px;
             margin-bottom: 10px;
             color: #fff;
         }
-
-        input {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #fff;
-            padding: 12px 15px;
-            border-radius: 8px;
-            font-size: 1em;
-            width: 100%;
+        .alert-error {
+            background: rgba(255, 87, 87, 0.2);
+            border: 1px solid #ff5757;
         }
-
-        input:focus {
-            outline: none;
-            border-color: #c471f5;
-            background: rgba(255, 255, 255, 0.08);
+        .alert-success {
+            background: rgba(87, 255, 87, 0.2);
+            border: 1px solid #57ff57;
         }
-
-        button {
-            background: #c471f5;
-            color: #fff;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background 0.3s;
-            width: 100%;
-            font-weight: bold;
+        .alert-info {
+            background: rgba(87, 87, 255, 0.2);
+            border: 1px solid #5757ff;
         }
-
-        button:hover {
-            background: #fa71cd;
+        @media (max-width: 900px) {
+            .split-container {
+                flex-direction: column;
+            }
+            .info-section, .form-section {
+                flex: unset;
+                width: 100%;
+                min-height: 320px;
+                padding: 40px 10vw;
+            }
+            .info-section {
+                align-items: center;
+                padding-bottom: 20px;
+            }
         }
-
-        .toggle-form {
-            text-align: center;
-            margin-top: 20px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .toggle-form a {
-            color: #c471f5;
-            text-decoration: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .toggle-form a:hover {
-            color: #fa71cd;
-        }
-
-        .error-message {
-            color: #ff6b6b;
-            background: rgba(255, 107, 107, 0.1);
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            display: none;
-        }
-
-        .error-message.show {
-            display: block;
+        @media (max-width: 600px) {
+            .info-section, .form-section {
+                padding: 30px 2vw;
+            }
+            .auth-box {
+                padding: 18px 6px 18px 6px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="left-section">
-        <div class="logo">
-            <img src="https://www.google.com/s2/favicons?sz=64&domain=example.com" alt="logo">
-            <span>Password Manager</span>
-        </div>
-        <div class="description">
-            Welcome to Password Manager, your secure vault for managing all your digital credentials. Our platform offers a seamless way to store, generate, and manage your passwords across different websites and applications.
-        </div>
-        <ul class="features">
-            <li><i class="fas fa-shield-alt"></i> Secure password storage with encryption</li>
-            <li><i class="fas fa-key"></i> Strong password generation</li>
-            <li><i class="fas fa-sync"></i> Easy password updates and management</li>
-            <li><i class="fas fa-user-shield"></i> User authentication and access control</li>
-        </ul>
-    </div>
-    <div class="right-section">
-        <form id="signinForm" method="POST">
-            {% csrf_token %}
-            <h2>Sign In</h2>
-            <div class="error-message" id="signinError"></div>
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Sign In</button>
-            <div class="toggle-form">
-                Don't have an account? <a onclick="toggleForms()">Sign Up</a>
+<div class="split-container">
+    <div class="info-section">
+        <div class="info-content">
+            <div class="info-logo">
+                <img src="https://www.google.com/s2/favicons?sz=64&domain=example.com" alt="logo">
+                <span>Password Manager</span>
             </div>
-        </form>
-        <form id="signupForm" method="POST" style="display: none;">
-            {% csrf_token %}
-            <h2>Sign Up</h2>
-            <div class="error-message" id="signupError"></div>
-            <input type="text" name="username" placeholder="Choose Username" required>
-            <input type="email" name="email" placeholder="Email Address" required>
-            <input type="password" name="password" placeholder="Create Password" required>
-            <input type="password" name="confirm_password" placeholder="Confirm Password" required>
-            <button type="submit">Create Account</button>
-            <div class="toggle-form">
-                Already have an account? <a onclick="toggleForms()">Sign In</a>
+            <div class="info-title">Welcome to Your Secure Vault</div>
+            <div class="info-desc">
+                Password Manager is your all-in-one solution for storing, generating, and managing your passwords securely. Never forget a password again, and keep your digital life safe and organized.<br><br>
+                <b>Why choose us?</b>
             </div>
-        </form>
+            <ul class="features-list">
+                <li><i class="fas fa-shield-alt"></i> End-to-end encrypted password storage</li>
+                <li><i class="fas fa-key"></i> Strong password generation</li>
+                <li><i class="fas fa-sync"></i> Easy password updates and management</li>
+                <li><i class="fas fa-user-shield"></i> Secure user authentication</li>
+                <li><i class="fas fa-laptop"></i> Access anywhere, anytime</li>
+            </ul>
+        </div>
     </div>
-
-    <script>
-        function toggleForms() {
-            const signinForm = document.getElementById('signinForm');
-            const signupForm = document.getElementById('signupForm');
-            const signinError = document.getElementById('signinError');
-            const signupError = document.getElementById('signupError');
-            
-            if (signinForm.style.display === 'none') {
-                signinForm.style.display = 'flex';
-                signupForm.style.display = 'none';
-                signupError.classList.remove('show');
-            } else {
-                signinForm.style.display = 'none';
-                signupForm.style.display = 'flex';
-                signinError.classList.remove('show');
-            }
-        }
-
-        // Show error messages if they exist
-        document.addEventListener('DOMContentLoaded', function() {
+    <div class="form-section">
+        <div class="auth-box">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('signin')">Sign In</button>
+                <button class="tab-btn" onclick="switchTab('signup')">Sign Up</button>
+            </div>
+            <!-- Sign In Form -->
+            <form id="signinForm" method="POST" action="{% url 'signin' %}" class="auth-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn">Sign In</button>
+            </form>
+            <!-- Sign Up Form -->
+            <form id="signupForm" method="POST" action="{% url 'signin' %}" class="auth-form" style="display: none;">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="signup-username">Username</label>
+                    <input type="text" id="signup-username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" name="confirm_password" required>
+                </div>
+                <button type="submit" class="btn">Sign Up</button>
+            </form>
             {% if messages %}
+            <div class="messages">
                 {% for message in messages %}
-                    var errorDiv = document.getElementById('{{ message.tags }}Error');
-                    if (errorDiv) {
-                        errorDiv.textContent = '{{ message }}';
-                        errorDiv.classList.add('show');
-                    }
-                {%endfor%}
-            {%endif%}
-        });
-    </script>
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<script>
+function switchTab(tab) {
+    const signinForm = document.getElementById('signinForm');
+    const signupForm = document.getElementById('signupForm');
+    const tabs = document.querySelectorAll('.tab-btn');
+    if (tab === 'signin') {
+        signinForm.style.display = 'block';
+        signupForm.style.display = 'none';
+        tabs[0].classList.add('active');
+        tabs[1].classList.remove('active');
+    } else {
+        signinForm.style.display = 'none';
+        signupForm.style.display = 'block';
+        tabs[0].classList.remove('active');
+        tabs[1].classList.add('active');
+    }
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const messages = document.querySelectorAll('.alert');
+    messages.forEach(message => {
+        if (message.textContent.includes('Invalid username or password')) {
+            switchTab('signup');
+        }
+    });
+});
+</script>
 </body>
 </html> 

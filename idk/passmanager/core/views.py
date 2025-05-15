@@ -92,12 +92,14 @@ def home(request):
             })
         except Exception as e:
             logger.error(f"Error decrypting password for {c.website}: {str(e)}")
+            continue  # Skip this credential if decryption fails
     
     logger.info(f"Rendering template with {len(cred_list)} credentials")
     logger.info(f"Credential data: {cred_list}")
     
     # Convert credentials to JSON string for JavaScript
     credentials_json = json.dumps(cred_list)
+    logger.info(f"JSON credentials: {credentials_json}")
     
     return render(request, 'core/home.html', {
         'credentials': credentials_json,  # Pass as JSON string
@@ -127,3 +129,39 @@ def get_credentials(request):
     except UserProfile.DoesNotExist:
         logger.warning(f"No UserProfile found for user {request.user.username}")
         return JsonResponse({'credentials': []})
+
+@login_required
+def delete_password(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            website = data.get('website')
+            
+            if not website:
+                return JsonResponse({'success': False, 'error': 'Website is required'})
+            
+            # Get the user's profile
+            user_profile = UserProfile.objects.get(user=request.user)
+            
+            # Find and delete the credential
+            credential = Credential.objects.filter(
+                user_profile=user_profile,
+                website=website
+            ).first()
+            
+            if credential:
+                credential.delete()
+                logger.info(f"Password deleted for website: {website}")
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'error': 'Credential not found'})
+                
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON data'})
+        except UserProfile.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'User profile not found'})
+        except Exception as e:
+            logger.error(f"Error deleting password: {str(e)}")
+            return JsonResponse({'success': False, 'error': str(e)})
+    
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
