@@ -1,0 +1,76 @@
+/* Universal Button Styles - Uiverse.io by arthur_6104 */
+.box-button {
+  cursor: pointer;
+  border: 4px solid #222;
+  background-color: #f3f3f3;
+  padding-bottom: 10px;
+  transition: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  display: inline-block;
+  border-radius: 12px;
+  margin: 6px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+.button {
+  background-color: #c471f5;
+  border: 4px solid #fff;
+  padding: 7px 22px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+
+.button span {
+  font-size: 1.1em;
+  letter-spacing: 1px;
+  color: #222;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.box-button:active {
+  padding: 0;
+  margin-bottom: 10px;
+  transform: translateY(10px);
+}
+
+/* Dark mode support */
+.dark-theme .box-button {
+  border-color: #fff;
+  background-color: #23233a;
+}
+.dark-theme .button {
+  background-color: #c471f5;
+  border-color: #fff;
+}
+.dark-theme .button span {
+  color: #fff;
+}
+
+/* Accent for special buttons (logout, theme, etc.) */
+.box-button.logout .button {
+  background-color: #ff6565;
+  border-color: #fff;
+}
+.box-button.logout .button span {
+  color: #fff;
+}
+.dark-theme .box-button.logout .button {
+  background-color: #ff6565;
+  border-color: #fff;
+}
+
+.box-button.theme .button {
+  background-color: #c471f5;
+  border-color: #fff;
+}
+.box-button.theme .button span {
+  color: #fff;
+}
+.dark-theme .box-button.theme .button {
+  background-color: #c471f5;
+  border-color: #fff;
+} 

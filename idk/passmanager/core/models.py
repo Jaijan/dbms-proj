@@ -4,6 +4,8 @@ from cryptography.fernet import Fernet
 import base64
 import os
 import logging
+from django.core.exceptions import ValidationError
+from django_otp.plugins.otp_totp.models import TOTPDevice
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +41,15 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=100)
     pin = models.CharField(max_length=4)
+    otp_device = models.OneToOneField(TOTPDevice, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def setup_otp(self):
+        if not self.otp_device:
+            device = TOTPDevice.objects.create(user=self.user, name='default')
+            self.otp_device = device
+            self.save()
+            return device
+        return self.otp_device
 
 class Credential(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -64,3 +75,16 @@ class Credential(models.Model):
         except Exception as e:
             logger.error(f"Error decrypting password for {self.website}: {str(e)}")
             raise
+
+class Document(models.Model):
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    file = models.FileField(upload_to='documents/')
+    filename = models.CharField(max_length=255)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    
+    def clean(self):
+        if self.file and self.file.size > 10 * 1024 * 1024:  # 10MB limit
+            raise ValidationError('File size must be no more than 10MB.')
+    
+    def __str__(self):
+        return self.filename

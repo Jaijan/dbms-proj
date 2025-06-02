@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Password Management System</title>
+    <title>PAMS - Password Management System</title>
+    <link rel="icon" type="image/png" href="/static/images/pams_logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/inputGroup.css">
+    <link rel="stylesheet" href="/static/components.css">
     <style>
         * {
             margin: 0;
@@ -22,7 +25,7 @@
         body {
             min-height: 100vh;
             min-width: 100vw;
-            background: radial-gradient(ellipse 60% 50% at 80% 60%, rgba(196,113,245,0.35) 0%, rgba(250,113,205,0.25) 40%, #1a1017 80%, #0a070a 100%);
+            background: radial-gradient(ellipse 60% 50% at 80% 60%, rgba(196,113,245,0.15) 0%, rgba(250,113,205,0.1) 40%, #1a1017 80%, #0a070a 100%);
             /* fallback for browsers that don't support gradients */
             background-color: #1a1017;
             display: flex;
@@ -41,15 +44,356 @@
         }
 
         #addFormSection > div {
+            max-width: none;
+            width: 38vw;
+            min-width: 340px;
+            max-width: 700px;
+            padding: 36px 48px 32px 48px;
+            border-radius: 28px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: all 0.3s ease;
+            animation: formSlideIn 0.5s ease;
+        }
+
+        .dark-theme #addFormSection > div {
+            background: rgba(30, 30, 40, 0.95);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes formSlideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         #addFormSection form {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            width: 100%;
             align-items: center;
+            justify-content: center;
+        }
+
+        .inputGroup {
+            width: 100%;
+            max-width: 340px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .inputGroup:nth-child(1) {
+            animation: slideIn 0.5s ease 0.1s both;
+        }
+
+        .inputGroup:nth-child(2) {
+            animation: slideIn 0.5s ease 0.2s both;
+        }
+
+        .inputGroup:nth-child(3) {
+            animation: slideIn 0.5s ease 0.3s both;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .inputGroup:hover {
+            transform: translateY(-2px);
+        }
+
+        .inputGroup input {
+            width: 100%;
+            max-width: 340px;
+            padding: 15px;
+            border: 1.5px solid rgba(196,113,245,0.13);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.9);
+            color: #222;
+            font-size: 1.1em;
+            font-family: 'SF Pro Display', 'Roboto', Arial, sans-serif;
+            box-shadow: 0 2px 8px rgba(31, 38, 135, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .dark-theme .inputGroup input {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .inputGroup input:focus {
+            outline: none;
+            border-color: #c471f5;
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(196, 113, 245, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .dark-theme .inputGroup input:focus {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .inputGroup label {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 1em;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            background: transparent;
+            padding: 0 5px;
+        }
+
+        .dark-theme .inputGroup label {
+            color: #aaa;
+        }
+
+        .inputGroup input:focus ~ label,
+        .inputGroup input:not(:placeholder-shown) ~ label {
+            top: 0;
+            left: 10px;
+            font-size: 0.85em;
+            padding: 0 5px;
+            background: #fff;
+            color: #c471f5;
+            border-radius: 4px;
+        }
+
+        .dark-theme .inputGroup input:focus ~ label,
+        .dark-theme .inputGroup input:not(:placeholder-shown) ~ label {
+            background: rgba(30, 30, 40, 0.95);
+        }
+
+        .generate-btn, #addFormSection button[type='submit'] {
+            width: 100%;
+            max-width: 340px;
+            margin: 10px auto;
+            display: block;
+            background: linear-gradient(90deg, #c471f5 0%, #fa71cd 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(196, 113, 245, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .generate-btn {
+            animation: slideIn 0.5s ease 0.4s both;
+        }
+
+        #addFormSection button[type='submit'] {
+            animation: slideIn 0.5s ease 0.5s both;
+        }
+
+        .generate-btn:hover, #addFormSection button[type='submit']:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(196, 113, 245, 0.3);
+        }
+
+        .generate-btn:active, #addFormSection button[type='submit']:active {
+            transform: translateY(0);
+        }
+
+        .generate-btn::after, #addFormSection button[type='submit']::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .generate-btn:focus:not(:active)::after,
+        #addFormSection button[type='submit']:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+
+        #addFormSection .main-logo-display {
+            margin-bottom: 30px;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: logoFadeIn 0.8s ease;
+        }
+
+        @keyframes logoFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        #addFormSection .main-title {
+            font-size: 2.2em;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #2d2b42;
+            transition: color 0.3s;
+            margin-bottom: 5px;
+        }
+
+        .dark-theme #addFormSection .main-title {
+            color: #fff;
+        }
+
+        #addFormSection .main-logo-display img {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        #addFormSection .main-logo-display img:hover {
+            transform: scale(1.05);
+        }
+
+        #addFormSection .website-display div {
+            font-size: 1.1em;
+            color: #c471f5;
+            margin-top: 5px;
+            transition: color 0.3s;
+        }
+
+        .dark-theme #addFormSection .website-display div {
+            color: #fa71cd;
+        }
+
+        /* Add animation for form elements */
+        .inputGroup:nth-child(1) { animation: slideIn 0.5s ease 0.1s both; }
+        .inputGroup:nth-child(2) { animation: slideIn 0.5s ease 0.2s both; }
+        .inputGroup:nth-child(3) { animation: slideIn 0.5s ease 0.3s both; }
+        .generate-btn { animation: slideIn 0.5s ease 0.4s both; }
+        #addFormSection button[type='submit'] { animation: slideIn 0.5s ease 0.5s both; }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Add hover effect for the entire form */
+        #addFormSection > div:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.15);
+        }
+
+        .dark-theme #addFormSection > div:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Add focus styles for better accessibility */
+        .inputGroup input:focus-visible {
+            outline: 2px solid #c471f5;
+            outline-offset: 2px;
+        }
+
+        /* Add loading state for buttons */
+        .generate-btn.loading, #addFormSection button[type='submit'].loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .generate-btn.loading::after, #addFormSection button[type='submit'].loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin: -10px 0 0 -10px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: button-loading-spinner 0.6s linear infinite;
+        }
+
+        @keyframes button-loading-spinner {
+            from {
+                transform: rotate(0turn);
+            }
+            to {
+                transform: rotate(1turn);
+            }
+        }
+
+        @media (max-width: 900px) {
+            #addFormSection > div {
+                width: 90vw;
+                max-width: 98vw;
+                padding: 18px 6vw 18px 6vw;
+            }
+        }
+
+        .arrow-btn {
+            background: none;
+            border: none;
+            font-size: 3em;
+            color: #ffffffcc;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .arrow-btn:hover {
+            color: #fff;
         }
 
         .main-logo-display {
@@ -66,56 +410,52 @@
             margin-bottom: 28px;
         }
 
-        .arrow-btn {
-            background: none;
-            border: none;
-            font-size: 3em;
-            color: #ffffffcc;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .arrow-btn:hover {
-            color: #fff;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            width: 320px;
-        }
-
-        input, button {
-            background: transparent;
-            border: 1px solid #ffffff99;
-            color: #fff;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 1em;
-        }
-
-        input:focus, button:hover {
-            border-color: #ffffff;
-            outline: none;
-        }
-
-        ::placeholder {
-            color: #bbbbbb;
-        }
-
         .copy-btn {
-            background: transparent;
-            border: 1px solid #ffffff99;
-            color: #fff;
-            padding: 10px;
-            border-radius: 8px;
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.85);
+            color: #0071e3;
+            border: none;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px 0 rgba(31, 38, 135, 0.13);
+            font-size: 1.25em;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.15s;
+            z-index: 2;
             cursor: pointer;
         }
-
         .copy-btn:hover {
-            background: #fff;
-            color: #000;
+            background: #0071e3;
+            color: #fff;
+            box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.18);
+            transform: translateY(-50%) scale(1.08);
+        }
+        .copy-btn i {
+            margin: 0;
+        }
+        /* Container for username/password + copy button */
+        .copy-row {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            min-width: 180px;
+        }
+        /* Adjust password/username field to leave space for button */
+        .copy-row .cool-password-text, .copy-row .username-text {
+            padding-right: 48px !important;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        /* For grid view, ensure card layout is columnar and buttons align */
+        .all-passwords-grid-card .copy-row {
+            margin-bottom: 14px;
         }
 
         .website-display {
@@ -255,28 +595,63 @@
             position: fixed;
             top: 0;
             left: 0;
-            background: rgba(30, 20, 40, 0.85);
+            background: rgba(255,255,255,0.18);
             padding: 12px 24px 12px 12px;
             border-bottom-right-radius: 16px;
             z-index: 1100;
             display: flex;
             gap: 12px;
             align-items: center;
+            box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.18), 0 1.5px 0 0 #e5e5ea;
+            backdrop-filter: blur(10px) saturate(1.1);
+            -webkit-backdrop-filter: blur(10px) saturate(1.1);
+            border-bottom: 1.5px solid rgba(255,255,255,0.22);
+            transition: box-shadow 0.3s, background 0.3s;
         }
         .menu-btn {
             background: none;
             border: none;
-            color: #fff;
+            color: #fff !important; /* Added !important to force white color */
             font-size: 1em;
             letter-spacing: 1px;
             cursor: pointer;
             padding: 8px 16px;
-            border-radius: 6px;
-            transition: background 0.2s, color 0.2s;
+            border-radius: 8px;
+            font-weight: 500;
+            position: relative;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            z-index: 1;
         }
-        .menu-btn:hover {
+        .menu-btn.active, .menu-btn.clicked {
+            background: #c471f5 !important;
+            color: #fff !important;
+            box-shadow: 0 2px 8px 0 rgba(196, 113, 245, 0.12);
+        }
+        .menu-btn.clicked {
+            animation: menuBtnFlash 0.7s;
+        }
+        @keyframes menuBtnFlash {
+            0% { background: #c471f5; color: #fff; }
+            80% { background: #c471f5; color: #fff; }
+            100% { background: none; color: #222; }
+        }
+        .menu-btn .menu-marker {
+            position: absolute;
+            left: 50%;
+            bottom: 2px;
+            transform: translateX(-50%) scaleX(0);
+            width: 60%;
+            height: 3px;
+            border-radius: 2px;
             background: #c471f5;
-            color: #fff;
+            opacity: 0;
+            transition: opacity 0.25s, transform 0.25s cubic-bezier(.4,1.6,.6,1), background 0.2s;
+            z-index: 2;
+        }
+        .menu-btn.active .menu-marker {
+            opacity: 1;
+            transform: translateX(-50%) scaleX(1);
+            background: #c471f5;
         }
         .viewer-website-name {
             font-size: 1.5em;
@@ -314,6 +689,16 @@
         .view-btn:hover, .view-btn.active {
             background: #c471f5;
             color: #fff;
+        }
+        .view-btn.clicked {
+            animation: viewBtnFlash 0.7s;
+            background: #c471f5 !important;
+            color: #fff !important;
+        }
+        @keyframes viewBtnFlash {
+            0% { background: #c471f5; color: #fff; }
+            80% { background: #c471f5; color: #fff; }
+            100% { background: #f5f5f7; color: #222; }
         }
         .all-passwords-list {
             width: 100%;
@@ -362,42 +747,751 @@
             margin-bottom: 4px;
             word-break: break-all;
         }
+        .inputGroup {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 1em 0 1em 0;
+            max-width: 190px;
+            position: relative;
+        }
+        .inputGroup label {
+            font-size: 100%;
+            position: absolute;
+            left: 0;
+            padding: 0.8em;
+            margin-left: 0.5em;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            color: rgb(100, 100, 100);
+        }
+        .inputGroup :is(input:focus, input:valid)~label {
+            transform: translateY(-50%) scale(.9);
+            margin: 0em;
+            margin-left: 1.3em;
+            padding: 0.4em;
+            background-color: #e8e8e8;
+        }
+        .inputGroup :is(input:focus, input:valid) {
+            border-color: rgb(150, 150, 200);
+        }
+        :root {
+            --primary: hsl(198,90%,55%);
+            --primaryT: hsla(198,90%,55%,0.2);
+            --bg: hsl(0,0%,100%);
+            --transDur: 0.3s;
+        }
+
+        /* Theme toggle styles */
+        .theme {
+            display: flex;
+            align-items: center;
+            -webkit-tap-highlight-color: transparent;
+            margin-left: 30px;  /* Increased spacing from signout button */
+        }
+
+        .theme__fill,
+        .theme__icon {
+            transition: 0.3s;
+        }
+
+        .theme__fill {
+            background-color: var(--bg);
+            display: block;
+            mix-blend-mode: difference;
+            position: fixed;
+            inset: 0;
+            height: 100%;
+            transform: translateX(-100%);
+        }
+
+        .theme__icon,
+        .theme__icon-part {
+            z-index: 1;
+        }
+
+        .theme__icon,
+        .theme__icon-part {
+            position: absolute;
+        }
+
+        .theme__icon {
+            display: block;
+            top: 0.5em;
+            left: 0.5em;
+            width: 1.5em;
+            height: 1.5em;
+            transform: translateY(-2px);  /* Adjust moon icon alignment */
+        }
+
+        .theme__icon-part {
+            border-radius: 50%;
+            box-shadow: 0.4em -0.4em 0 0.5em hsl(0,0%,100%) inset;
+            top: calc(50% - 0.5em);
+            left: calc(50% - 0.5em);
+            width: 1em;
+            height: 1em;
+            transition: box-shadow var(--transDur) ease-in-out,
+                    opacity var(--transDur) ease-in-out,
+                    transform var(--transDur) ease-in-out;
+            transform: scale(0.5);
+        }
+
+        .theme__icon-part ~ .theme__icon-part {
+            background-color: hsl(0,0%,100%);
+            border-radius: 0.05em;
+            top: 50%;
+            left: calc(50% - 0.05em);
+            transform: rotate(0deg) translateY(0.5em);
+            transform-origin: 50% 0;
+            width: 0.1em;
+            height: 0.2em;
+        }
+
+        .theme__icon-part:nth-child(3) { transform: rotate(45deg) translateY(0.45em); }
+        .theme__icon-part:nth-child(4) { transform: rotate(90deg) translateY(0.45em); }
+        .theme__icon-part:nth-child(5) { transform: rotate(135deg) translateY(0.45em); }
+        .theme__icon-part:nth-child(6) { transform: rotate(180deg) translateY(0.45em); }
+        .theme__icon-part:nth-child(7) { transform: rotate(225deg) translateY(0.45em); }
+        .theme__icon-part:nth-child(8) { transform: rotate(270deg) translateY(0.5em); }
+        .theme__icon-part:nth-child(9) { transform: rotate(315deg) translateY(0.5em); }
+
+        .theme__label,
+        .theme__toggle,
+        .theme__toggle-wrap {
+            position: relative;
+        }
+
+        .theme__toggle,
+        .theme__toggle:before {
+            display: block;
+        }
+
+        .theme__toggle {
+            background-color: hsl(48,90%,85%);
+            border-radius: 25% / 50%;
+            box-shadow: 0 0 0 0.125em var(--primaryT);
+            padding: 0.25em;
+            width: 6em;
+            height: 3em;
+            -webkit-appearance: none;
+            appearance: none;
+            transition: background-color var(--transDur) ease-in-out,
+                    box-shadow 0.15s ease-in-out,
+                    transform var(--transDur) ease-in-out;
+        }
+
+        .theme__toggle:before {
+            background-color: hsl(48,90%,55%);
+            border-radius: 50%;
+            content: "";
+            width: 2.5em;
+            height: 2.5em;
+            transition: 0.3s;
+        }
+
+        .theme__toggle:focus {
+            box-shadow: 0 0 0 0.125em var(--primary);
+            outline: transparent;
+        }
+
+        /* Checked state */
+        .theme__toggle:checked {
+            background-color: hsl(198,90%,15%);
+        }
+
+        .theme__toggle:checked:before,
+        .theme__toggle:checked ~ .theme__icon {
+            transform: translateX(3em);
+        }
+
+        .theme__toggle:checked:before {
+            background-color: hsl(198,90%,55%);
+        }
+
+        .theme__toggle:checked ~ .theme__fill {
+            transform: translateX(0);
+        }
+
+        .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(1) {
+            box-shadow: 0.2em -0.2em 0 0.2em hsl(0,0%,100%) inset;
+            transform: scale(1);
+            top: 0.2em;
+            left: -0.2em;
+        }
+
+        .theme__toggle:checked ~ .theme__icon .theme__icon-part ~ .theme__icon-part {
+            opacity: 0;
+        }
+
+        .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(2) { transform: rotate(45deg) translateY(0.8em); }
+        .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(3) { transform: rotate(90deg) translateY(0.8em); }
+        .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(4) { transform: rotate(135deg) translateY(0.8em); }
+        .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(5) { transform: rotate(180deg) translateY(0.8em); }
+        .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(6) { transform: rotate(225deg) translateY(0.8em); }
+        .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(7) { transform: rotate(270deg) translateY(0.8em); }
+        .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(8) { transform: rotate(315deg) translateY(0.8em); }
+        .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(9) { transform: rotate(360deg) translateY(0.8em); }
+
+        .theme__toggle-wrap {
+            margin: 0 0.75em;
+        }
+
+        @supports selector(:focus-visible) {
+            .theme__toggle:focus {
+                box-shadow: 0 0 0 0.125em var(--primaryT);
+            }
+
+            .theme__toggle:focus-visible {
+                box-shadow: 0 0 0 0.125em var(--primary);
+            }
+        }
+
+        #dropArea {
+            border:2px dashed #c471f5;
+            border-radius:10px;
+            padding:40px;
+            background:rgba(255,255,255,0.5); /* More visible in light mode */
+            color:#2d2b42; /* Darker text for light mode */
+            margin:30px auto;
+            max-width:500px;
+            transition: background 0.3s, color 0.3s, border-color 0.3s;
+        }
+        body:not(.dark-theme) #dropArea {
+            border-color: #c471f5;
+            background: rgba(255,255,255,0.85);
+            color: #2d2b42;
+        }
+        body:not(.dark-theme) #dropArea label {
+            color: #a13be7;
+            font-weight: 600;
+        }
+        body:not(.dark-theme) #dropArea p {
+            color: #2d2b42;
+        }
+        .dark-theme #dropArea {
+            border-color: #c471f5;
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+        }
+        .dark-theme #dropArea label {
+            color: #c471f5;
+            font-weight: 600;
+        }
+        .dark-theme #dropArea p {
+            color: #fff;
+        }
+        /* Ensure headings adapt to theme */
+        .main-title {
+            font-size: 2.2em;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #fff;
+            transition: color 0.3s;
+        }
+        body:not(.dark-theme) .main-title {
+            color: #2d2b42 !important;
+        }
+        .documents-heading {
+            color: #fff;
+            transition: color 0.3s;
+        }
+        body:not(.dark-theme) .documents-heading {
+            color: #2d2b42 !important;
+        }
+        .cool-password-text, .username-text {
+            background: rgba(255,255,255,0.45);
+            color: #222;
+            border-radius: 10px;
+            padding: 7px 18px;
+            font-size: 1.08em;
+            font-family: 'SF Mono', 'Fira Mono', 'Consolas', monospace;
+            box-shadow: 0 1px 4px 0 rgba(31, 38, 135, 0.10);
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s, min-width 0.2s, z-index 0.2s;
+            min-width: 80px;
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+        .cool-password-text:hover, .cool-password-text.show,
+        .username-text:hover, .username-text.show {
+            background: rgba(255,255,255,0.95);
+            color: #111;
+            box-shadow: 0 2px 12px 0 rgba(31, 38, 135, 0.18);
+            min-width: 180px;
+            max-width: 100vw;
+            overflow: visible;
+            text-overflow: unset;
+            white-space: normal;
+            z-index: 10;
+        }
+        .dark-theme .cool-password-text:hover, .dark-theme .cool-password-text.show,
+        .dark-theme .username-text:hover, .dark-theme .username-text.show {
+            color: #111 !important;
+        }
+        .cool-password-text.copied, .username-text.copied {
+            animation: copiedFlash 0.7s;
+            background: #0071e3 !important;
+            color: #fff !important;
+        }
+        @keyframes copiedFlash {
+            0% { background: #0071e3; color: #fff; }
+            80% { background: #0071e3; color: #fff; }
+            100% { background: rgba(255,255,255,0.95); color: #111; }
+        }
+        .copy-row:hover .copy-btn,
+        .copy-row:focus-within .copy-btn {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+        .copy-btn {
+            opacity: 1;
+            pointer-events: auto;
+            /* ...rest of copy-btn styles... */
+        }
+        /* Apple-like glassmorphism for View All Passwords */
+        #allPasswordsSection {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            min-height: 60vh;
+            padding: 32px 0 80px 0;
+            border-radius: 32px;
+            background: rgba(255,255,255,0.13);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            backdrop-filter: blur(18px) saturate(1.2);
+            -webkit-backdrop-filter: blur(18px) saturate(1.2);
+            border: 1.5px solid rgba(255,255,255,0.18);
+            transition: background 0.4s, box-shadow 0.4s;
+        }
+        .all-passwords-list-row, .all-passwords-grid-card {
+            background: rgba(255,255,255,0.22);
+            border-radius: 18px;
+            box-shadow: 0 2px 12px 0 rgba(31, 38, 135, 0.10);
+            border: 1px solid rgba(255,255,255,0.22);
+            margin-bottom: 18px;
+            padding: 22px 32px;
+            font-family: 'SF Pro Display', 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+            font-size: 1.13em;
+            color: #222;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: box-shadow 0.2s, background 0.2s, transform 0.2s;
+            backdrop-filter: blur(8px) saturate(1.1);
+            -webkit-backdrop-filter: blur(8px) saturate(1.1);
+        }
+        .all-passwords-list-row:hover, .all-passwords-grid-card:hover {
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            background: rgba(255,255,255,0.32);
+            transform: translateY(-2px) scale(1.012);
+        }
+        .all-passwords-list-row span, .all-passwords-grid-card .website, .all-passwords-grid-card .username, .all-passwords-grid-card .password {
+            color: #222;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+        .copy-btn, .delete-btn {
+            background: rgba(255,255,255,0.18);
+            border: none;
+            color: #6e6e73;
+            border-radius: 8px;
+            padding: 7px 12px;
+            font-size: 1.15em;
+            margin-left: 8px;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            box-shadow: 0 1px 4px 0 rgba(31, 38, 135, 0.08);
+            cursor: pointer;
+        }
+        .copy-btn:hover, .delete-btn:hover {
+            background: #f5f5f7;
+            color: #0071e3;
+            box-shadow: 0 2px 8px 0 rgba(31, 38, 135, 0.12);
+        }
+        .view-options-bar {
+            background: rgba(255,255,255,0.18);
+            border-top: 1.5px solid rgba(255,255,255,0.22);
+            box-shadow: 0 -2px 12px 0 rgba(31, 38, 135, 0.10);
+            backdrop-filter: blur(12px) saturate(1.1);
+            -webkit-backdrop-filter: blur(12px) saturate(1.1);
+        }
+        .view-btn {
+            background: #f5f5f7;
+            color: #222;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            padding: 8px 22px;
+            font-size: 1.08em;
+            margin-left: 8px;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            box-shadow: 0 1px 4px 0 rgba(31, 38, 135, 0.08);
+        }
+        .view-btn.active, .view-btn:hover {
+            background: #c471f5;
+            color: #fff;
+            box-shadow: 0 2px 8px 0 rgba(196, 113, 245, 0.12);
+        }
+        ::-webkit-scrollbar {
+            width: 10px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(31,38,135,0.10);
+            border-radius: 8px;
+        }
+        .view-options-bar span {
+            color: #fff;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+        body:not(.dark-theme) .view-options-bar span {
+            color: #222 !important;
+        }
+        #otpModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(30, 20, 40, 0.45);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            transition: background 0.3s;
+        }
+        #otpModal .otp-modal-content {
+            background: rgba(255,255,255,0.25);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            backdrop-filter: blur(18px) saturate(1.2);
+            -webkit-backdrop-filter: blur(18px) saturate(1.2);
+            border: 1.5px solid rgba(255,255,255,0.18);
+            padding: 38px 36px 32px 36px;
+            min-width: 320px;
+            max-width: 95vw;
+            text-align: center;
+            color: #222;
+            font-family: 'SF Pro Display', 'Roboto', Arial, sans-serif;
+            transition: background 0.4s, box-shadow 0.4s;
+        }
+        #otpModal h3 {
+            font-size: 1.35em;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: #222;
+            letter-spacing: 1px;
+        }
+        #otpModal input[type="email"], #otpModal input[type="text"] {
+            width: 90%;
+            padding: 13px;
+            border: 1.5px solid rgba(196,113,245,0.13);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.45);
+            color: #222;
+            font-size: 1.08em;
+            font-family: 'SF Pro Display', 'Roboto', Arial, sans-serif;
+            box-shadow: 0 1px 4px 0 rgba(31, 38, 135, 0.10);
+            margin-bottom: 16px;
+            transition: border 0.2s, background 0.2s;
+        }
+        #otpModal input:focus {
+            outline: none;
+            border-color: #c471f5;
+            background: #fff;
+        }
+        #otpModal .btn {
+            background: linear-gradient(90deg, #c471f5 0%, #fa71cd 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.08em;
+            font-weight: 600;
+            box-shadow: 0 2px 8px 0 rgba(196, 113, 245, 0.10);
+            margin: 8px 6px 0 6px;
+            transition: background 0.3s, box-shadow 0.3s;
+            display: inline-block;
+        }
+        #otpModal .btn:hover {
+            background: #b35ee0;
+            box-shadow: 0 4px 16px 0 rgba(196, 113, 245, 0.18);
+        }
+        #otpModal .btn[disabled], #otpModal .btn:disabled {
+            background: #e0e0e0;
+            color: #aaa;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        #otpModal .otp-modal-content input[type="email"]::-webkit-input-placeholder,
+        #otpModal .otp-modal-content input[type="text"]::-webkit-input-placeholder {
+            color: #aaa;
+            opacity: 1;
+        }
+        #otpModal .otp-modal-content input[type="email"]::-moz-placeholder,
+        #otpModal .otp-modal-content input[type="text"]::-moz-placeholder {
+            color: #aaa;
+            opacity: 1;
+        }
+        #otpModal .otp-modal-content input[type="email"]:-ms-input-placeholder,
+        #otpModal .otp-modal-content input[type="text"]:-ms-input-placeholder {
+            color: #aaa;
+            opacity: 1;
+        }
+        #otpModal .otp-modal-content input[type="email"]::placeholder,
+        #otpModal .otp-modal-content input[type="text"]::placeholder {
+            color: #aaa;
+            opacity: 1;
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+        }
+        .modal-content h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-secondary {
+            background: #6c757d;
+        }
+        .empty-state-message {
+            color: #222;
+            transition: color 0.3s ease;
+        }
+        .dark-theme .empty-state-message {
+            color: #fff;
+        }
+
+        /* Custom Modal Component */
+        .custom-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        .dark-theme .modal-content {
+            background: rgba(30, 30, 40, 0.95);
+            color: #fff;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #222;
+            font-size: 1.4em;
+        }
+
+        .dark-theme .modal-header h3 {
+            color: #fff;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.8em;
+            color: #666;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .dark-theme .close-modal {
+            color: #fff;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+            color: #444;
+            font-size: 1.1em;
+            line-height: 1.5;
+        }
+
+        .dark-theme .modal-body {
+            color: #ddd;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .modal-footer .btn {
+            padding: 8px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .modal-footer .btn:not(.btn-secondary) {
+            background: #c471f5;
+            color: white;
+        }
+
+        .modal-footer .btn-secondary {
+            background: #666;
+            color: white;
+        }
+
+        .modal-footer .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            border: 1.5px solid rgba(196,113,245,0.13);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.45);
+            color: #222;
+            font-size: 1.1em;
+            font-family: 'SF Pro Display', 'Roboto', Arial, sans-serif;
+            box-shadow: 0 1px 4px 0 rgba(31, 38, 135, 0.10);
+            transition: border 0.2s, background 0.2s;
+            margin-top: 10px;
+        }
+
+        .dark-theme .modal-input {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: #c471f5;
+            background: rgba(255,255,255,0.9);
+        }
+
+        .dark-theme .modal-input:focus {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .modal-input::placeholder {
+            color: #888;
+        }
+
+        .dark-theme .modal-input::placeholder {
+            color: #aaa;
+        }
     </style>
 </head>
 <body>
 
     <!-- Profile Icon -->
-    <div class="top-right">
-        <button class="profile-btn" onclick="toggleProfileForm()">
-            <i class="fas fa-user-circle"></i>
-        </button>
-        <form class="profile-form" method="POST" id="profileForm">
-            <input type="text" name="name" placeholder="Enter your name" required><br>
-            <input type="password" name="pin" placeholder="4-digit PIN" maxlength="4" required><br>
-            <button type="submit">Switch User</button>
-        </form>
-        <a href="{% url 'signout' %}" class="signout-btn" id="signoutBtn" style="color: #fff; text-decoration: none; margin-left: 20px;">
-            <i class="fas fa-sign-out-alt"></i> Sign Out
-        </a>
-    </div>
+    <a href="{% url 'signout' %}" class="Btn">
+        <div class="sign">
+            <svg viewBox="0 0 512 512">
+                <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path>
+            </svg>
+        </div>
+        <div class="text">Logout</div>
+    </a>
+    <button class="theme-toggle" id="themeToggle">
+        <div class="sign">
+            <svg viewBox="0 0 24 24" id="themeIcon">
+                <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"></path>
+            </svg>
+        </div>
+        <div class="text">Theme</div>
+    </button>
 
     <!-- Menu Bar (top left) -->
     <div class="menu-bar">
-        <button class="menu-btn" onclick="showPasswords()">My Passwords</button>
-        <button class="menu-btn" onclick="showAllPasswords()">View All Passwords</button>
+        <button class="menu-btn" onclick="showPasswords()">Add Password<span class="menu-marker"></span></button>
+        <button class="menu-btn" onclick="showAllPasswords()">View All Passwords<span class="menu-marker"></span></button>
+        <button class="menu-btn" onclick="showDocuments()">Documents<span class="menu-marker"></span></button>
     </div>
 
     <!-- Fullscreen Form Layout -->
     <div class="main-wrapper" id="addFormSection">
         <div>
-            <div class="website-display main-logo-display">
-                <img src="https://www.google.com/s2/favicons?sz=64&domain=example.com" id="favicon" alt="favicon">
-                <span id="websiteName">example.com</span>
+            <div class="website-display main-logo-display" style="flex-direction: column; align-items: center;">
+                <img src="/static/images/pams_logo.png" id="favicon" alt="PAMS Logo" style="width: 120px; height: auto; margin-bottom: 10px;">
+                <span id="websiteName" class="main-title">PAMS</span>
+                <div style="font-size: 1em; color: #c471f5; margin-top: 2px;">Password Management System</div>
             </div>
-            <h2>Password Management System</h2>
             <form method="POST">
                 {% csrf_token %}
-                <input list="websites" name="website" placeholder="Website Name / URL" id="websiteInput" required>
+                <div class="inputGroup">
+                    <input list="websites" name="website" id="websiteInput" required autocomplete="off" placeholder=" ">
+                    <label for="websiteInput">Website Name / URL</label>
+                </div>
                 <datalist id="websites">
                     <option value="Google">
                     <option value="Facebook">
@@ -408,8 +1502,14 @@
                     <option value="Netflix">
                     <option value="Amazon">
                 </datalist>
-                <input type="text" name="username" placeholder="Username" required>
-                <input type="password" name="password" id="password" placeholder="Password" required>
+                <div class="inputGroup">
+                    <input type="text" name="username" id="usernameInput" required autocomplete="off" placeholder=" ">
+                    <label for="usernameInput">Username</label>
+                </div>
+                <div class="inputGroup">
+                    <input type="password" name="password" id="password" required autocomplete="off" placeholder=" ">
+                    <label for="password">Password</label>
+                </div>
                 <button type="button" class="generate-btn" onclick="generatePassword()">Generate Password</button>
                 <button type="submit">Save Credential</button>
             </form>
@@ -422,7 +1522,7 @@
         <div class="viewer-content">
             <div class="viewer-website-name" id="viewerWebsiteTitle">Website</div>
             <div class="website-display" style="margin-bottom: 30px; justify-content: center;">
-                <img src="https://www.google.com/s2/favicons?sz=64&domain=example.com" id="viewerFavicon" alt="favicon">
+                <img src="/static/images/pams_logo.png" id="viewerFavicon" alt="PAMS Logo" style="width: 32px; height: 32px; border-radius: 8px;">
                 <span id="viewerWebsiteName">example.com</span>
             </div>
             <div style="margin-bottom: 20px; text-align: center;">
@@ -439,8 +1539,8 @@
         <button class="arrow-btn viewer-arrow right" onclick="nextPassword()"><i class="fas fa-chevron-right"></i></button>
     </div>
 
-    <!-- View All Passwords Bottom Bar (hidden by default) -->
-    <div class="view-options-bar" id="viewOptionsBar" style="display:none;">
+    <!-- View All Passwords Bottom Bar (now always visible) -->
+    <div class="view-options-bar" id="viewOptionsBar">
         <span>Choose view:</span>
         <button class="view-btn" id="listViewBtn" onclick="setListView()">List View</button>
         <button class="view-btn" id="gridViewBtn" onclick="setGridView()">Grid View</button>
@@ -455,10 +1555,68 @@
         <div id="allPasswordsGridView" style="display:none;"></div>
     </div>
 
+    <!-- Documents Section (hidden by default) -->
+    <div class="main-wrapper" id="documentsSection" style="display:none;">
+        <div style="text-align:center; width: 100%; max-width: 900px; margin: 0 auto; padding: 32px 0 80px 0;">
+            <h2 class="documents-heading" style="font-size: 2.2em; margin-bottom: 30px; color: #c471f5;">Your Documents</h2>
+            
+            <!-- Upload Area -->
+            <div id="dropArea" style="border: 2px dashed #c471f5; border-radius: 20px; padding: 40px; background: rgba(255,255,255,0.05); color: #fff; margin: 30px auto; max-width: 500px; transition: all 0.3s ease;">
+                <i class="fas fa-cloud-upload-alt" style="font-size: 3em; color: #c471f5; margin-bottom: 20px;"></i>
+                <p style="font-size: 1.2em; margin-bottom: 15px;">Drag & drop files here</p>
+                <p style="color: #c471f5; margin-bottom: 20px;">or</p>
+                <label for="fileElem" style="background: #c471f5; color: white; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.3s ease;">
+                    Browse Files
+                </label>
+                <input type="file" id="fileElem" multiple style="display:none;" onchange="handleFiles(this.files)">
+                <p style="margin-top: 15px; font-size: 0.9em; color: #888;">Maximum file size: 10MB</p>
+            </div>
+
+            <!-- Documents List -->
+            <div id="uploadedDocsList" style="margin-top: 40px; display: grid; gap: 20px; padding: 0 20px;">
+                <!-- Documents will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- OTP Modal for Document Access -->
+    <div id="otpModal" style="display:none;">
+        <div class="otp-modal-content">
+            <h3>Enter your email to<br>access this file</h3>
+            <input type="email" id="docAccessEmail" placeholder="Email">
+            <div id="otpInputSection" style="display:none; margin-top:15px;">
+                <input type="text" id="docOtp" maxlength="6" placeholder="Enter OTP">
+                <button class="btn" onclick="verifyDocOtp()">Verify & Download</button>
+            </div>
+            <button class="btn" onclick="sendDocOtp()">Send OTP</button>
+            <button class="btn" style="background:#444;" onclick="closeOtpModal()">Cancel</button>
+        </div>
+    </div>
+
     <!-- Credentials JSON for JS (hidden, for JS only) -->
     <script id="credentials-data" type="application/json">
         {{ credentials|safe }}
     </script>
+
+    <!-- Custom Modal Component -->
+    <div id="customModal" class="custom-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Notification</h3>
+                <button class="close-modal" onclick="closeCustomModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage"></p>
+                <div id="modalInputContainer" style="display: none; margin-top: 15px;">
+                    <input type="text" id="modalInput" class="modal-input" placeholder="Enter OTP" maxlength="6" pattern="[0-9]{6}">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="modalConfirmBtn" class="btn" onclick="handleModalConfirm()">OK</button>
+                <button id="modalCancelBtn" class="btn btn-secondary" onclick="closeCustomModal()" style="display: none;">Cancel</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         function copyPassword() {
@@ -530,31 +1688,107 @@
             }
             return result;
         }
-        function showAllPasswords() {
-            allPasswordsMode = true;
+        function hideAllSections() {
             document.getElementById('addFormSection').style.display = 'none';
             document.getElementById('passwordViewerSection').style.display = 'none';
-            document.getElementById('backBtn').style.display = 'none';
-            document.getElementById('viewOptionsBar').style.display = 'flex';
+            document.getElementById('allPasswordsSection').style.display = 'none';
+            document.getElementById('documentsSection').style.display = 'none';
+            document.getElementById('viewOptionsBar').style.display = 'none';
+        }
+        function showPasswords() {
+            hideAllSections();
+            document.getElementById('addFormSection').style.display = 'flex';
+            document.getElementById('viewOptionsBar').style.display = 'none';
+        }
+        function showAllPasswords() {
+            hideAllSections();
             document.getElementById('allPasswordsSection').style.display = 'block';
-            document.getElementById('signoutBtn').style.display = 'none';
-            
-            if (!credentials || credentials.length === 0) {
-                const noPasswordsMessage = `
-                    <div style="text-align: center; margin-top: 100px; color: #fff; font-size: 1.5em;">
-                        <i class="fas fa-lock" style="font-size: 2em; margin-bottom: 20px;"></i>
-                        <p>No passwords stored yet</p>
-                        <p style="font-size: 0.8em; margin-top: 10px; color: #c471f5;">Add your first password using the form</p>
-                    </div>
-                `;
-                document.getElementById('allPasswordsListView').innerHTML = noPasswordsMessage;
-                document.getElementById('allPasswordsListView').style.display = 'block';
-                document.getElementById('allPasswordsGridView').style.display = 'none';
+            document.getElementById('viewOptionsBar').style.display = 'flex';
+            // Always show the last selected view, but default to list if unknown
+            if (currentView === 'grid') {
+                setGridView();
             } else {
-                renderAllPasswordsListView(credentials);
-                document.getElementById('allPasswordsListView').style.display = 'block';
-                document.getElementById('allPasswordsGridView').style.display = 'none';
+                setListView();
             }
+        }
+        function showDocuments() {
+            hideAllSections();
+            document.getElementById('documentsSection').style.display = 'block';
+            document.getElementById('viewOptionsBar').style.display = 'none';
+            
+            // Fetch and display documents
+            fetch('/documents/')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const list = document.getElementById('uploadedDocsList');
+                        list.innerHTML = '';
+                        
+                        if (data.documents.length === 0) {
+                            list.innerHTML = `
+                                <div style="text-align: center; padding: 40px; background: rgba(255,255,255,0.05); border-radius: 16px;">
+                                    <i class="fas fa-file-alt" style="font-size: 3em; color: #c471f5; margin-bottom: 20px;"></i>
+                                    <p style="color: #c471f5; font-size: 1.2em;">No documents uploaded yet</p>
+                                    <p style="color: #888; margin-top: 10px;">Upload your first document using the area above</p>
+                                </div>
+                            `;
+                            return;
+                        }
+                        
+                        data.documents.forEach(doc => {
+                            const docElement = document.createElement('div');
+                            docElement.style.background = 'rgba(255,255,255,0.05)';
+                            docElement.style.borderRadius = '16px';
+                            docElement.style.padding = '20px';
+                            docElement.style.display = 'flex';
+                            docElement.style.justifyContent = 'space-between';
+                            docElement.style.alignItems = 'center';
+                            docElement.style.transition = 'all 0.3s ease';
+                            docElement.style.border = '1px solid rgba(255,255,255,0.1)';
+                            
+                            docElement.innerHTML = `
+                                <div style="display: flex; align-items: center; gap: 15px;">
+                                    <div style="background: rgba(196,113,245,0.1); padding: 12px; border-radius: 12px;">
+                                        <i class="fas fa-file-alt" style="font-size: 1.5em; color: #c471f5;"></i>
+                                    </div>
+                                    <div>
+                                        <div style="color: #c471f5; font-size: 1.1em; font-weight: 500;">${doc.filename}</div>
+                                        <div style="color: #888; font-size: 0.9em; margin-top: 5px;">Uploaded ${new Date(doc.uploaded_at).toLocaleDateString()}</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 10px;">
+                                    <button onclick="verifyAndViewDocument(${doc.id})" class="btn-view" style="background: rgba(196,113,245,0.1); color: #c471f5; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                    <button onclick="verifyAndDownloadDocument(${doc.id})" class="btn-download" style="background: rgba(196,113,245,0.1); color: #c471f5; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;">
+                                        <i class="fas fa-download"></i> Download
+                                    </button>
+                                    <button onclick="deleteDocument(${doc.id})" class="btn-delete" style="background: rgba(255,68,68,0.1); color: #ff4444; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            `;
+                            
+                            // Add hover effects
+                            docElement.onmouseover = function() {
+                                this.style.transform = 'translateY(-2px)';
+                                this.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
+                            };
+                            docElement.onmouseout = function() {
+                                this.style.transform = 'translateY(0)';
+                                this.style.boxShadow = 'none';
+                            };
+                            
+                            list.appendChild(docElement);
+                        });
+                    } else {
+                        alert('Error fetching documents: ' + (data.error || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error fetching documents. Please try again.');
+                });
         }
         function renderAllPasswordsListView(creds) {
             const container = document.getElementById('allPasswordsListView');
@@ -564,24 +1798,29 @@
             creds.forEach((cred, index) => {
                 const row = document.createElement('div');
                 row.className = 'all-passwords-list-row';
+                row.style.display = 'flex';
+                row.style.alignItems = 'center';
+                row.style.justifyContent = 'space-between';
                 row.innerHTML = `
                     <span><b>${cred.website}</b></span>
-                    <span>
-                        ${cred.username}
-                        <button class="copy-btn" onclick="copyToClipboard('${cred.username}')" style="margin-left: 10px;">
+                    <span class="copy-row">
+                        <span class="username-text">${cred.username}</span>
+                        <button class="copy-btn" onclick="copyToClipboard('${cred.username}')" title="Copy Username">
                             <i class="fas fa-copy"></i>
                         </button>
                     </span>
-                    <span>
-                        ${cred.password}
-                        <button class="copy-btn" onclick="copyToClipboard('${cred.password}')" style="margin-left: 10px;">
+                    <span class="copy-row">
+                        <span class="cool-password-text" data-password="${cred.password}">••••••••</span>
+                        <button class="copy-btn" onclick="copyToClipboard('${cred.password}')" title="Copy Password">
                             <i class="fas fa-copy"></i>
                         </button>
                     </span>
+                    <button class="delete-btn" onclick="deletePassword('${cred.website}')" title="Delete" style="margin-left: 24px; font-size: 1.3em;"><i class="fas fa-trash"></i></button>
                 `;
                 list.appendChild(row);
             });
             container.appendChild(list);
+            enablePasswordClickCopy();
         }
         function renderAllPasswordsGridView(creds) {
             const container = document.getElementById('allPasswordsGridView');
@@ -591,29 +1830,32 @@
             creds.forEach(cred => {
                 const card = document.createElement('div');
                 card.className = 'all-passwords-grid-card';
+                card.style.position = 'relative';
                 card.innerHTML = `
                     <div class="website">${cred.website}</div>
-                    <div class="username">
-                        ${cred.username}
-                        <button class="copy-btn" onclick="copyToClipboard('${cred.username}')" style="margin-left: 10px;">
+                    <div class="copy-row">
+                        <span class="username-text">${cred.username}</span>
+                        <button class="copy-btn" onclick="copyToClipboard('${cred.username}')" title="Copy Username">
                             <i class="fas fa-copy"></i>
                         </button>
                     </div>
-                    <div class="password">
-                        ${cred.password}
-                        <button class="copy-btn" onclick="copyToClipboard('${cred.password}')" style="margin-left: 10px;">
+                    <div class="copy-row">
+                        <span class="cool-password-text" data-password="${cred.password}">••••••••</span>
+                        <button class="copy-btn" onclick="copyToClipboard('${cred.password}')" title="Copy Password">
                             <i class="fas fa-copy"></i>
                         </button>
                     </div>
+                    <button class="delete-btn" onclick="deletePassword('${cred.website}')" title="Delete" style="position: absolute; top: 10px; right: 10px; font-size: 1.3em;"><i class="fas fa-trash"></i></button>
                 `;
                 grid.appendChild(card);
             });
             container.appendChild(grid);
+            enablePasswordClickCopy();
         }
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text)
-                .then(() => alert('Copied to clipboard!'))
-                .catch(err => alert('Failed to copy!'));
+                .then(() => showCustomModal('Success', 'Copied to clipboard!'))
+                .catch(err => showCustomModal('Error', 'Failed to copy!'));
         }
         function setListView() {
             currentView = 'list';
@@ -625,8 +1867,8 @@
             
             if (!credentials || credentials.length === 0) {
                 const noPasswordsMessage = `
-                    <div style="text-align: center; margin-top: 100px; color: #fff; font-size: 1.5em;">
-                        <i class="fas fa-lock" style="font-size: 2em; margin-bottom: 20px;"></i>
+                    <div style="text-align: center; margin-top: 100px; font-size: 1.5em;" class="empty-state-message">
+                        <i class="fas fa-lock" style="font-size: 2em; margin-bottom: 20px; color: #c471f5;"></i>
                         <p>No passwords stored yet</p>
                         <p style="font-size: 0.8em; margin-top: 10px; color: #c471f5;">Add your first password using the form</p>
                     </div>
@@ -646,8 +1888,8 @@
             
             if (!credentials || credentials.length === 0) {
                 const noPasswordsMessage = `
-                    <div style="text-align: center; margin-top: 100px; color: #fff; font-size: 1.5em;">
-                        <i class="fas fa-lock" style="font-size: 2em; margin-bottom: 20px;"></i>
+                    <div style="text-align: center; margin-top: 100px; font-size: 1.5em;" class="empty-state-message">
+                        <i class="fas fa-lock" style="font-size: 2em; margin-bottom: 20px; color: #c471f5;"></i>
                         <p>No passwords stored yet</p>
                         <p style="font-size: 0.8em; margin-top: 10px; color: #c471f5;">Add your first password using the form</p>
                     </div>
@@ -658,16 +1900,6 @@
             }
         }
         // Show Passwords UI
-        function showPasswords() {
-            document.getElementById('addFormSection').style.display = 'none';
-            document.getElementById('passwordViewerSection').style.display = 'flex';
-            document.getElementById('backBtn').style.display = 'block';
-            document.getElementById('viewOptionsBar').style.display = 'none';
-            document.getElementById('allPasswordsSection').style.display = 'none';
-            document.getElementById('signoutBtn').style.display = 'none';
-            updateViewer();
-        }
-        // Return to Add Form UI
         function showAddForm() {
             document.getElementById('addFormSection').style.display = 'flex';
             document.getElementById('passwordViewerSection').style.display = 'none';
@@ -679,11 +1911,15 @@
         // Copy functions for viewer
         function copyViewerUsername() {
             const username = document.getElementById('viewerUsername').value;
-            navigator.clipboard.writeText(username).then(() => alert('Username copied!'));
+            navigator.clipboard.writeText(username)
+                .then(() => showCustomModal('Success', 'Username copied!'))
+                .catch(() => showCustomModal('Error', 'Failed to copy username'));
         }
         function copyViewerPassword() {
             const password = document.getElementById('viewerPassword').value;
-            navigator.clipboard.writeText(password).then(() => alert('Password copied!'));
+            navigator.clipboard.writeText(password)
+                .then(() => showCustomModal('Success', 'Password copied!'))
+                .catch(() => showCustomModal('Error', 'Failed to copy password'));
         }
         // Navigation for viewer (placeholder)
         function prevPassword() {
@@ -708,9 +1944,636 @@
             }
             const passwordField = document.getElementById("password");
             passwordField.value = password;
-            navigator.clipboard.writeText(password).then(() => {
-                alert("Password generated and copied!");
+            navigator.clipboard.writeText(password)
+                .then(() => showCustomModal('Success', 'Password generated and copied!'))
+                .catch(() => showCustomModal('Error', 'Failed to copy generated password'));
+        }
+        function hideDocuments() {
+            document.getElementById('documentsSection').style.display = 'none';
+            document.getElementById('addFormSection').style.display = 'flex';
+        }
+        // Drag and drop logic
+        const dropArea = document.getElementById('dropArea');
+        if (dropArea) {
+            dropArea.addEventListener('dragover', (e) => { e.preventDefault(); dropArea.style.background = 'rgba(196,113,245,0.1)'; });
+            dropArea.addEventListener('dragleave', (e) => { e.preventDefault(); dropArea.style.background = 'rgba(255,255,255,0.05)'; });
+            dropArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropArea.style.background = 'rgba(255,255,255,0.05)';
+                handleFiles(e.dataTransfer.files);
             });
+        }
+        function handleFiles(files) {
+            const dropArea = document.getElementById('dropArea');
+            
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
+                
+                // Check file size (10MB limit)
+                if (file.size > 10 * 1024 * 1024) {
+                    alert(`File "${file.name}" is too large. Maximum size is 10MB.`);
+                    continue;
+                }
+                
+                // Show upload progress
+                const progressDiv = document.createElement('div');
+                progressDiv.style.margin = '10px 0';
+                progressDiv.style.padding = '10px';
+                progressDiv.style.background = 'rgba(255,255,255,0.05)';
+                progressDiv.style.borderRadius = '8px';
+                progressDiv.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-file-alt" style="color: #c471f5;"></i>
+                        <span style="color: #c471f5;">${file.name}</span>
+                        <span style="color: #888;">Uploading...</span>
+                    </div>
+                `;
+                dropArea.appendChild(progressDiv);
+                
+                // Create form data
+                const formData = new FormData();
+                formData.append('file', file);
+                
+                // Upload file
+                fetch('/upload-document/', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        progressDiv.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                                <span style="color: #4CAF50;">${file.name} uploaded successfully!</span>
+                            </div>
+                        `;
+                        setTimeout(() => {
+                            progressDiv.remove();
+                            showDocuments(); // Refresh the document list
+                        }, 2000);
+                    } else {
+                        progressDiv.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-times-circle" style="color: #ff4444;"></i>
+                                <span style="color: #ff4444;">Error uploading ${file.name}: ${data.error}</span>
+                            </div>
+                        `;
+                        setTimeout(() => progressDiv.remove(), 3000);
+                    }
+                })
+                .catch(error => {
+                    progressDiv.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-times-circle" style="color: #ff4444;"></i>
+                            <span style="color: #ff4444;">Error uploading ${file.name}: ${error.message}</span>
+                        </div>
+                    `;
+                    setTimeout(() => progressDiv.remove(), 3000);
+                });
+            }
+        }
+        
+        function deleteDocument(documentId) {
+            if (!confirm('Are you sure you want to delete this document?')) {
+                return;
+            }
+            
+            fetch(`/documents/${documentId}/delete/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Remove the document from the UI
+                    const documentElement = document.querySelector(`[onclick="deleteDocument(${documentId})"]`).parentElement;
+                    documentElement.remove();
+                } else {
+                    alert(`Error deleting document: ${data.error}`);
+                }
+            })
+            .catch(error => {
+                alert(`Error deleting document: ${error.message}`);
+            });
+        }
+        
+        // Load documents when the documents section is shown
+        function showDocuments() {
+            hideAllSections();
+            document.getElementById('documentsSection').style.display = 'block';
+            document.getElementById('viewOptionsBar').style.display = 'none';
+            
+            // Fetch and display documents
+            fetch('/documents/')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const list = document.getElementById('uploadedDocsList');
+                        list.innerHTML = '';
+                        
+                        if (data.documents.length === 0) {
+                            list.innerHTML = `
+                                <div style="text-align: center; padding: 40px; background: rgba(255,255,255,0.05); border-radius: 16px;">
+                                    <i class="fas fa-file-alt" style="font-size: 3em; color: #c471f5; margin-bottom: 20px;"></i>
+                                    <p style="color: #c471f5; font-size: 1.2em;">No documents uploaded yet</p>
+                                    <p style="color: #888; margin-top: 10px;">Upload your first document using the area above</p>
+                                </div>
+                            `;
+                            return;
+                        }
+                        
+                        data.documents.forEach(doc => {
+                            const docElement = document.createElement('div');
+                            docElement.style.background = 'rgba(255,255,255,0.05)';
+                            docElement.style.borderRadius = '16px';
+                            docElement.style.padding = '20px';
+                            docElement.style.display = 'flex';
+                            docElement.style.justifyContent = 'space-between';
+                            docElement.style.alignItems = 'center';
+                            docElement.style.transition = 'all 0.3s ease';
+                            docElement.style.border = '1px solid rgba(255,255,255,0.1)';
+                            
+                            docElement.innerHTML = `
+                                <div style="display: flex; align-items: center; gap: 15px;">
+                                    <div style="background: rgba(196,113,245,0.1); padding: 12px; border-radius: 12px;">
+                                        <i class="fas fa-file-alt" style="font-size: 1.5em; color: #c471f5;"></i>
+                                    </div>
+                                    <div>
+                                        <div style="color: #c471f5; font-size: 1.1em; font-weight: 500;">${doc.filename}</div>
+                                        <div style="color: #888; font-size: 0.9em; margin-top: 5px;">Uploaded ${new Date(doc.uploaded_at).toLocaleDateString()}</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 10px;">
+                                    <button onclick="verifyAndViewDocument(${doc.id})" class="btn-view" style="background: rgba(196,113,245,0.1); color: #c471f5; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                    <button onclick="verifyAndDownloadDocument(${doc.id})" class="btn-download" style="background: rgba(196,113,245,0.1); color: #c471f5; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;">
+                                        <i class="fas fa-download"></i> Download
+                                    </button>
+                                    <button onclick="deleteDocument(${doc.id})" class="btn-delete" style="background: rgba(255,68,68,0.1); color: #ff4444; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            `;
+                            
+                            // Add hover effects
+                            docElement.onmouseover = function() {
+                                this.style.transform = 'translateY(-2px)';
+                                this.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
+                            };
+                            docElement.onmouseout = function() {
+                                this.style.transform = 'translateY(0)';
+                                this.style.boxShadow = 'none';
+                            };
+                            
+                            list.appendChild(docElement);
+                        });
+                    } else {
+                        alert('Error fetching documents: ' + (data.error || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error fetching documents. Please try again.');
+                });
+        }
+        // OTP Modal logic
+        function openOtpModal() {
+            document.getElementById('otpModal').style.display = 'flex';
+        }
+        function closeOtpModal() {
+            document.getElementById('otpModal').style.display = 'none';
+            document.getElementById('otpInputSection').style.display = 'none';
+        }
+        function sendDocOtp() {
+            document.getElementById('otpInputSection').style.display = 'block';
+            alert('OTP sent to your email!');
+        }
+        function verifyDocOtp() {
+            alert('OTP verified! File download will start.');
+            closeOtpModal();
+        }
+        // Theme toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+            
+            // Set initial theme to light mode
+            document.body.classList.remove('dark-theme');
+            document.body.style.background = 'radial-gradient(ellipse 60% 50% at 80% 60%, rgba(196,113,245,0.3) 0%, rgba(250,113,205,0.3) 40%, #ffffff 80%, #f8f9fa 100%)';
+            document.title = 'PAMS - Password Management System';
+            document.querySelector('link[rel="icon"]').href = '/static/images/pams_logo_light.png';
+            themeIcon.innerHTML = '<path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"></path>';
+            
+            // Theme toggle event listener
+            themeToggle.addEventListener('click', function() {
+                const isDark = document.body.classList.contains('dark-theme');
+                
+                if (isDark) {
+                    // Switch to light theme
+                    document.body.classList.remove('dark-theme');
+                    document.body.style.background = 'radial-gradient(ellipse 60% 50% at 80% 60%, rgba(196,113,245,0.3) 0%, rgba(250,113,205,0.3) 40%, #ffffff 80%, #f8f9fa 100%)';
+                    document.title = 'PAMS - Password Management System';
+                    document.querySelector('link[rel="icon"]').href = '/static/images/pams_logo_light.png';
+                    themeIcon.innerHTML = '<path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"></path>';
+                } else {
+                    // Switch to dark theme
+                    document.body.classList.add('dark-theme');
+                    document.body.style.background = '#1e1e2f';
+                    document.title = 'PAMS - Password Management System';
+                    document.querySelector('link[rel="icon"]').href = '/static/images/pams_logo.png';
+                    themeIcon.innerHTML = '<path d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"></path>';
+                }
+            });
+        });
+        function deletePassword(website) {
+            showCustomModal(
+                'Confirm Delete',
+                `Are you sure you want to delete the password for ${website}?`,
+                'Delete',
+                true,
+                null,
+                () => {
+                    const csrf = getCookie('csrftoken');
+                    fetch('/delete-password/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrf
+                        },
+                        body: JSON.stringify({ website: website })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            credentials = credentials.filter(cred => cred.website !== website);
+                            renderAllPasswordsListView(credentials);
+                            renderAllPasswordsGridView(credentials);
+                            showCustomModal('Success', 'Password deleted successfully!');
+                        } else {
+                            showCustomModal('Error', 'Failed to delete password: ' + (data.error || ''));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Delete fetch error:', error);
+                        showCustomModal('Error', 'Failed to delete password');
+                    });
+                }
+            );
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const addForm = document.querySelector('#addFormSection form');
+            if (addForm) {
+                addForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(addForm);
+                    fetch('/home/', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: formData
+                    })
+                    .then(response => response.text())
+                    .then(html => {
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = html;
+                        const newCredsScript = tempDiv.querySelector('#credentials-data');
+                        if (newCredsScript) {
+                            credentials = JSON.parse(newCredsScript.textContent || '[]');
+                            renderAllPasswordsListView(credentials);
+                            renderAllPasswordsGridView(credentials);
+                        }
+                        addForm.reset();
+                        showCustomModal('Success', 'Password saved successfully!');
+                    })
+                    .catch(() => showCustomModal('Error', 'Failed to save password'));
+                });
+            }
+        });
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        // Hide viewOptionsBar on initial load
+        window.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('viewOptionsBar').style.display = 'none';
+        });
+        // Add click-to-copy for password field
+        function enablePasswordClickCopy() {
+            document.querySelectorAll('.cool-password-text').forEach(el => {
+                el.onclick = function(e) {
+                    const pwd = el.getAttribute('data-password');
+                    navigator.clipboard.writeText(pwd).then(() => {
+                        el.classList.add('copied');
+                        el.textContent = 'Copied!';
+                        setTimeout(() => {
+                            el.classList.remove('copied');
+                            el.textContent = '••••••••';
+                        }, 700);
+                    });
+                };
+                el.onmouseenter = function() {
+                    el.classList.add('show');
+                    el.textContent = el.getAttribute('data-password');
+                };
+                el.onmouseleave = function() {
+                    el.classList.remove('show');
+                    el.textContent = '••••••••';
+                };
+            });
+            document.querySelectorAll('.username-text').forEach(el => {
+                el.onclick = function(e) {
+                    const username = el.textContent;
+                    navigator.clipboard.writeText(username).then(() => {
+                        el.classList.add('copied');
+                        el.textContent = 'Copied!';
+                        setTimeout(() => {
+                            el.classList.remove('copied');
+                            el.textContent = username;
+                        }, 700);
+                    });
+                };
+                el.onmouseenter = function() {
+                    el.classList.add('show');
+                };
+                el.onmouseleave = function() {
+                    el.classList.remove('show');
+                };
+            });
+        }
+        // Add click feedback to view bar buttons
+        function enableViewBarClickFeedback() {
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.onclick = function(e) {
+                    btn.classList.add('clicked');
+                    setTimeout(() => {
+                        btn.classList.remove('clicked');
+                    }, 700);
+                };
+            });
+        }
+        // Add click feedback and marker to menu bar
+        function enableMenuBarClickFeedback() {
+            const menuBtns = document.querySelectorAll('.menu-btn');
+            menuBtns.forEach((btn, index) => {
+                btn.addEventListener('click', function(e) {
+                    // Remove active class from all buttons
+                    menuBtns.forEach(b => b.classList.remove('active'));
+                    // Add active class to clicked button
+                    btn.classList.add('clicked', 'active');
+                    // Switch to the appropriate section based on button index
+                    switch(index) {
+                        case 0:
+                            showPasswords();
+                            break;
+                        case 1:
+                            showAllPasswords();
+                            break;
+                        case 2:
+                            showDocuments();
+                            break;
+                    }
+                    // Remove clicked animation after delay
+                    setTimeout(() => {
+                        btn.classList.remove('clicked');
+                    }, 700);
+                });
+            });
+        }
+        // Add OTP verification modal
+        function showOtpModal(documentId, action) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <h3>Verify OTP</h3>
+                    <p>Please enter the OTP from your authenticator app to ${action} this document.</p>
+                    <input type="text" id="documentOtp" placeholder="Enter OTP" maxlength="6" pattern="[0-9]{6}">
+                    <div class="modal-actions">
+                        <button onclick="verifyDocumentOtp(${documentId}, '${action}')" class="btn">Verify</button>
+                        <button onclick="closeModal()" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function closeModal() {
+            const modal = document.querySelector('.modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function verifyDocumentOtp(documentId, action) {
+            const otp = document.getElementById('documentOtp').value;
+            if (!otp) {
+                alert('Please enter the OTP');
+                return;
+            }
+
+            fetch('/verify-document-otp/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    document_id: documentId,
+                    otp: otp
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    closeModal();
+                    if (action === 'view') {
+                        window.open(`/view-document/${documentId}/`, '_blank');
+                    } else if (action === 'download') {
+                        // Fetch the file with credentials
+                        fetch(`/download-document/${documentId}/`, {
+                            credentials: 'same-origin'
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Download failed');
+                            }
+                            return response.blob();
+                        })
+                        .then(blob => {
+                            // Create a URL for the blob
+                            const url = window.URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = ''; // Let the server set the filename
+                            document.body.appendChild(link);
+                            link.click();
+                            // Clean up
+                            window.URL.revokeObjectURL(url);
+                            document.body.removeChild(link);
+                        })
+                        .catch(error => {
+                            console.error('Download error:', error);
+                            alert('Failed to download the document. Please try again.');
+                        });
+                    }
+                } else {
+                    alert(data.error || 'Invalid OTP');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while verifying OTP');
+            });
+        }
+
+        function verifyAndViewDocument(documentId) {
+            showCustomModal(
+                'Verify OTP',
+                'Please enter your OTP to view this document:',
+                'View Document',
+                true,
+                null,
+                () => {
+                    const otp = document.getElementById('modalInput').value;
+                    if (!otp) {
+                        showCustomModal('Error', 'Please enter the OTP');
+                        return;
+                    }
+
+                    fetch('/verify-document-otp/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: JSON.stringify({
+                            document_id: documentId,
+                            otp: otp
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.open(`/view-document/${documentId}/`, '_blank');
+                        } else {
+                            showCustomModal('Error', data.error || 'Invalid OTP');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showCustomModal('Error', 'Failed to verify OTP. Please try again.');
+                    });
+                },
+                true
+            );
+        }
+
+        function verifyAndDownloadDocument(documentId) {
+            showCustomModal(
+                'Verify OTP',
+                'Please enter your OTP to download this document:',
+                'Download',
+                true,
+                null,
+                () => {
+                    const otp = document.getElementById('modalInput').value;
+                    if (!otp) {
+                        showCustomModal('Error', 'Please enter the OTP');
+                        return;
+                    }
+
+                    fetch('/verify-document-otp/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: JSON.stringify({
+                            document_id: documentId,
+                            otp: otp
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Create a hidden iframe for download
+                            const iframe = document.createElement('iframe');
+                            iframe.style.display = 'none';
+                            iframe.src = `/download-document/${documentId}/`;
+                            document.body.appendChild(iframe);
+                            
+                            // Remove the iframe after 5 seconds
+                            setTimeout(() => {
+                                document.body.removeChild(iframe);
+                            }, 5000);
+                        } else {
+                            showCustomModal('Error', data.error || 'Invalid OTP');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showCustomModal('Error', 'Failed to verify OTP. Please try again.');
+                    });
+                },
+                true
+            );
+        }
+
+        // Add event listener for Enter key in modal input
+        document.getElementById('modalInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleModalConfirm();
+            }
+        });
+
+        // Modal state
+        let modalCallback = null;
+        let modalConfirmCallback = null;
+
+        function showCustomModal(title, message, confirmText = 'OK', showCancel = false, callback = null, confirmCallback = null, showInput = false) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('modalConfirmBtn').textContent = confirmText;
+            document.getElementById('modalCancelBtn').style.display = showCancel ? 'block' : 'none';
+            document.getElementById('modalInputContainer').style.display = showInput ? 'block' : 'none';
+            document.getElementById('modalInput').value = '';
+            document.getElementById('customModal').style.display = 'flex';
+            modalCallback = callback;
+            modalConfirmCallback = confirmCallback;
+        }
+
+        function closeCustomModal() {
+            document.getElementById('customModal').style.display = 'none';
+            if (modalCallback) {
+                modalCallback();
+                modalCallback = null;
+            }
+        }
+
+        function handleModalConfirm() {
+            if (modalConfirmCallback) {
+                modalConfirmCallback();
+            }
+            closeCustomModal();
         }
     </script>
 </body>

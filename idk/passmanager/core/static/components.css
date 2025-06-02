@@ -1,0 +1,392 @@
+/* Logout Button */
+.Btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition-property: width, border-radius, box-shadow, color, background, background-color;
+    transition-duration: 0.5s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+    background-color: rgb(255, 65, 65);
+    text-decoration: none;
+    position: fixed;
+    top: 20px;
+    right: 30px;
+}
+
+.sign {
+    width: 100%;
+    transition-duration: .3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sign svg {
+    width: 17px;
+}
+
+.sign svg path {
+    fill: white;
+}
+
+.text {
+    position: absolute;
+    right: 0%;
+    width: 0%;
+    opacity: 0;
+    color: white;
+    font-size: 1.2em;
+    font-weight: 600;
+    transition-duration: .3s;
+}
+
+.Btn:hover {
+    width: 125px;
+    border-radius: 40px;
+    transition-duration: 0.5s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.Btn:hover .sign {
+    width: 30%;
+    transition-duration: .3s;
+    padding-left: 20px;
+}
+
+.Btn:hover .text {
+    opacity: 1;
+    width: 70%;
+    transition-duration: .3s;
+    padding-right: 10px;
+}
+
+.Btn:active {
+    transform: translate(2px, 2px);
+}
+
+/* Theme Toggle */
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition-property: width, border-radius, box-shadow, color, background, background-color;
+    transition-duration: 0.5s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+    background-color: #c471f5;
+    position: fixed;
+    top: 80px;
+    right: 30px;
+}
+
+.theme-toggle .sign {
+    width: 100%;
+    transition-duration: .3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle .sign svg {
+    width: 20px;
+    height: 20px;
+}
+
+.theme-toggle .sign svg path {
+    fill: white;
+}
+
+.theme-toggle .text {
+    position: absolute;
+    right: 0%;
+    width: 0%;
+    opacity: 0;
+    color: white;
+    font-size: 1.2em;
+    font-weight: 600;
+    transition-duration: .3s;
+}
+
+.theme-toggle:hover {
+    width: 140px;
+    border-radius: 40px;
+    transition-duration: 0.5s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-toggle:hover .sign {
+    width: 30%;
+    transition-duration: .3s;
+    padding-left: 20px;
+}
+
+.theme-toggle:hover .text {
+    opacity: 1;
+    width: 70%;
+    transition-duration: .3s;
+    padding-right: 10px;
+}
+
+.theme-toggle:active {
+    transform: translate(2px, 2px);
+}
+
+/* Tab content styles */
+.all-passwords-list-row,
+.all-passwords-grid-card,
+.viewer-content,
+.website-display,
+.viewer-website-name,
+input,
+button,
+.copy-btn,
+.menu-btn,
+.view-btn,
+.back-btn,
+.my-passwords-btn {
+    transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Text color transitions for all elements */
+body:not(.dark-theme) {
+    color: #2d2b42 !important;
+}
+
+body:not(.dark-theme) .all-passwords-list-row,
+body:not(.dark-theme) .all-passwords-list-row span,
+body:not(.dark-theme) .all-passwords-grid-card,
+body:not(.dark-theme) .all-passwords-grid-card .website,
+body:not(.dark-theme) .all-passwords-grid-card .username,
+body:not(.dark-theme) .all-passwords-grid-card .password,
+body:not(.dark-theme) .viewer-content,
+body:not(.dark-theme) .website-display,
+body:not(.dark-theme) .viewer-website-name,
+body:not(.dark-theme) input,
+body:not(.dark-theme) button,
+body:not(.dark-theme) .copy-btn,
+body:not(.dark-theme) .menu-btn,
+body:not(.dark-theme) .view-btn,
+body:not(.dark-theme) .back-btn,
+body:not(.dark-theme) .my-passwords-btn,
+body:not(.dark-theme) .tab-title,
+body:not(.dark-theme) .website-name,
+body:not(.dark-theme) .username,
+body:not(.dark-theme) .password,
+body:not(.dark-theme) .email,
+body:not(.dark-theme) .phone,
+body:not(.dark-theme) .notes {
+    color: #2d2b42;
+}
+
+body:not(.dark-theme) input::placeholder {
+    color: rgba(45, 43, 66, 0.6);
+}
+
+/* Dark theme text colors */
+.dark-theme {
+    background: #1e1e2f !important;
+    color: #fff !important;
+}
+
+.dark-theme .all-passwords-list-row,
+.dark-theme .all-passwords-list-row span,
+.dark-theme .all-passwords-grid-card,
+.dark-theme .all-passwords-grid-card .website,
+.dark-theme .all-passwords-grid-card .username,
+.dark-theme .all-passwords-grid-card .password,
+.dark-theme .viewer-content,
+.dark-theme .website-display,
+.dark-theme .viewer-website-name,
+.dark-theme input,
+.dark-theme button,
+.dark-theme .copy-btn,
+.dark-theme .menu-btn,
+.dark-theme .view-btn,
+.dark-theme .back-btn,
+.dark-theme .my-passwords-btn,
+.dark-theme .tab-title,
+.dark-theme .website-name,
+.dark-theme .username,
+.dark-theme .password,
+.dark-theme .email,
+.dark-theme .phone,
+.dark-theme .notes {
+    color: #fff;
+}
+
+.dark-theme input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Ensure smooth transitions for all text elements */
+* {
+    transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Form control styles */
+.form-control,
+.form-select {
+    background-color: transparent;
+    border: 1px solid rgba(45, 43, 66, 0.2);
+    transition: all 0.3s ease;
+}
+
+body:not(.dark-theme) .form-control,
+body:not(.dark-theme) .form-select {
+    background-color: #fff;
+    border-color: rgba(45, 43, 66, 0.2);
+}
+
+.dark-theme .form-control,
+.dark-theme .form-select {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Modal styles */
+.modal-content {
+    transition: background-color 0.3s ease;
+}
+
+body:not(.dark-theme) .modal-content {
+    background-color: #fff;
+}
+
+.dark-theme .modal-content {
+    background-color: #1e1e2f;
+}
+
+/* Dropdown styles */
+.dropdown-menu {
+    transition: background-color 0.3s ease;
+}
+
+body:not(.dark-theme) .dropdown-menu {
+    background-color: #fff;
+    border-color: rgba(45, 43, 66, 0.2);
+}
+
+.dark-theme .dropdown-menu {
+    background-color: #1e1e2f;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Alert styles */
+.alert {
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+body:not(.dark-theme) .alert {
+    background-color: #fff;
+    border-color: rgba(45, 43, 66, 0.2);
+}
+
+.dark-theme .alert {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Remove the top-right div since we're using fixed positioning */
+.top-right {
+    display: none;
+}
+
+/* Logo styles */
+.main-logo-display img {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    transition: filter 0.3s ease;
+}
+
+body:not(.dark-theme) .main-logo-display img {
+    filter: invert(1);
+}
+
+/* Dark mode styles */
+.dark-theme {
+    background: #1e1e2f !important;
+    color: #fff !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark-theme .main-logo-display img {
+    filter: none;
+}
+
+/* Menu bar styles */
+.menu-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 12px 24px 12px 12px;
+    border-bottom-right-radius: 16px;
+    z-index: 1100;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+/* Light theme menu styles */
+body:not(.dark-theme) .menu-bar {
+    background: rgba(30, 29, 29, 0.95);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+body:not(.dark-theme) .menu-btn {
+    color: #2d2b42;
+    background: transparent;
+}
+
+body:not(.dark-theme) .menu-btn:hover {
+    background: #f0f2f5;
+    color: #2d2b42;
+}
+
+/* Dark theme menu styles */
+.dark-theme .menu-bar {
+    background: rgba(30, 20, 40, 0.85);
+}
+
+.dark-theme .menu-btn {
+    color: #0a0a0a;
+}
+
+.dark-theme .menu-btn:hover {
+    background: #c471f5;
+    color: #fff;
+}
+
+.view-options-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, #c471f5 0%, #fa71cd 100%);
+    color: #1d1919;
+    padding: 18px 0 14px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    z-index: 1200;
+    font-size: 1.1em;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+    border-top: 2px solid #fff2;
+} 

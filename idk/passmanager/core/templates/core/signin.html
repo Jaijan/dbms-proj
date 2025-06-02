@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sign In - Password Manager</title>
+    <title>Sign In - PAMS</title>
     {% load static %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
@@ -11,9 +11,9 @@
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            font-family: 'Roboto', Arial, sans-serif;
-            background: linear-gradient(135deg, #1e1e2f 0%, #2d2b42 100%);
-            color: #fff;
+            font-family: 'SF Pro Display', 'Roboto', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f5f7 0%, #e5e9f2 100%);
+            color: #222;
         }
         .split-container {
             display: flex;
@@ -80,7 +80,7 @@
         }
         .form-section {
             flex: 1;
-            background: #181828;
+            background: none;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -88,37 +88,21 @@
             padding: 60px 30px;
         }
         .auth-box {
-            background: rgba(255,255,255,0.07);
-            border-radius: 12px;
-            padding: 38px 32px 32px 32px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 24px;
+            padding: 48px 40px 40px 40px;
             width: 100%;
             max-width: 370px;
-            box-shadow: 0 2px 16px 0 rgba(0,0,0,0.10);
-        }
-        .tabs {
-            display: flex;
-            margin-bottom: 24px;
-            border-bottom: 1px solid rgba(255,255,255,0.13);
-        }
-        .tab-btn {
-            flex: 1;
-            padding: 12px 0;
-            background: none;
-            border: none;
-            color: #fff;
-            cursor: pointer;
-            font-size: 1.1em;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        .tab-btn.active {
-            color: #c471f5;
-            border-bottom: 2.5px solid #c471f5;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            backdrop-filter: blur(18px) saturate(1.2);
+            -webkit-backdrop-filter: blur(18px) saturate(1.2);
+            border: 1.5px solid rgba(255,255,255,0.18);
+            transition: background 0.4s, box-shadow 0.4s;
         }
         .auth-form {
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 22px;
         }
         .form-group {
             display: flex;
@@ -126,55 +110,72 @@
             gap: 6px;
         }
         .form-group label {
-            color: #fff;
-            font-size: 0.97em;
+            color: #222;
+            font-size: 1em;
+            font-weight: 500;
         }
         .form-group input {
-            padding: 11px;
-            border: 1px solid rgba(255,255,255,0.13);
-            border-radius: 6px;
-            background: rgba(255,255,255,0.09);
-            color: #fff;
-            font-size: 1em;
+            padding: 13px;
+            border: 1.5px solid rgba(196,113,245,0.13);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.45);
+            color: #222;
+            font-size: 1.08em;
+            font-family: 'SF Pro Display', 'Roboto', Arial, sans-serif;
+            box-shadow: 0 1px 4px 0 rgba(31, 38, 135, 0.10);
+            transition: border 0.2s, background 0.2s;
         }
         .form-group input:focus {
             outline: none;
             border-color: #c471f5;
+            background: #fff;
         }
         .btn {
-            background: #c471f5;
+            background: linear-gradient(90deg, #c471f5 0%, #fa71cd 100%);
             color: white;
             border: none;
-            padding: 13px;
-            border-radius: 6px;
+            padding: 15px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 1em;
-            font-weight: 500;
-            transition: background 0.3s ease;
+            font-size: 1.08em;
+            font-weight: 600;
+            box-shadow: 0 2px 8px 0 rgba(196, 113, 245, 0.10);
+            transition: background 0.3s, box-shadow 0.3s;
         }
         .btn:hover {
             background: #b35ee0;
+            box-shadow: 0 4px 16px 0 rgba(196, 113, 245, 0.18);
         }
-        .messages {
-            margin-top: 18px;
+        .otp-feedback {
+            margin-top: 8px;
+            font-size: 0.98em;
+            color: #c471f5;
+            background: rgba(196,113,245,0.08);
+            border-radius: 6px;
+            padding: 7px 12px;
+            display: none;
+            text-align: center;
+            transition: opacity 0.3s, transform 0.3s;
         }
-        .alert {
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            color: #fff;
+        .otp-feedback.visible {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
         }
-        .alert-error {
-            background: rgba(255, 87, 87, 0.2);
-            border: 1px solid #ff5757;
+        .otp-feedback.error {
+            color: #ff5757;
+            background: rgba(255,87,87,0.08);
         }
-        .alert-success {
-            background: rgba(87, 255, 87, 0.2);
-            border: 1px solid #57ff57;
+        .form-group#otp-section {
+            opacity: 0;
+            max-height: 0;
+            pointer-events: none;
+            transition: opacity 0.4s, max-height 0.4s;
         }
-        .alert-info {
-            background: rgba(87, 87, 255, 0.2);
-            border: 1px solid #5757ff;
+        .form-group#otp-section.visible {
+            opacity: 1;
+            max-height: 100px;
+            pointer-events: auto;
         }
         @media (max-width: 900px) {
             .split-container {
@@ -199,6 +200,38 @@
                 padding: 18px 6px 18px 6px;
             }
         }
+        .tabs {
+            display: flex;
+            margin-bottom: 24px;
+            border-bottom: none;
+            gap: 12px;
+            justify-content: center;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 13px 0;
+            background: rgba(255,255,255,0.22);
+            border: none;
+            color: #222;
+            cursor: pointer;
+            font-size: 1.13em;
+            font-weight: 600;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 2px 8px 0 rgba(196, 113, 245, 0.10);
+            transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+            margin-bottom: -2px;
+            outline: none;
+        }
+        .tab-btn.active {
+            background: linear-gradient(90deg, #c471f5 0%, #fa71cd 100%);
+            color: #fff;
+            box-shadow: 0 4px 16px 0 rgba(196, 113, 245, 0.18);
+            z-index: 2;
+        }
+        .tab-btn:not(.active):hover {
+            background: rgba(196,113,245,0.13);
+            color: #c471f5;
+        }
     </style>
 </head>
 <body>
@@ -206,12 +239,12 @@
     <div class="info-section">
         <div class="info-content">
             <div class="info-logo">
-                <img src="https://www.google.com/s2/favicons?sz=64&domain=example.com" alt="logo">
-                <span>Password Manager</span>
+                <img src="/static/images/pams_logo.png" alt="PAMS Logo" style="width: 56px; height: 56px;">
+                <span style="font-size: 2em; font-weight: bold; color: #fff; letter-spacing: 2px;">PAMS</span>
             </div>
             <div class="info-title">Welcome to Your Secure Vault</div>
             <div class="info-desc">
-                Password Manager is your all-in-one solution for storing, generating, and managing your passwords securely. Never forget a password again, and keep your digital life safe and organized.<br><br>
+                PAMS is your all-in-one solution for storing, generating, and managing your passwords securely. Never forget a password again, and keep your digital life safe and organized.<br><br>
                 <b>Why choose us?</b>
             </div>
             <ul class="features-list">
@@ -229,21 +262,23 @@
                 <button class="tab-btn active" onclick="switchTab('signin')">Sign In</button>
                 <button class="tab-btn" onclick="switchTab('signup')">Sign Up</button>
             </div>
-            <!-- Sign In Form -->
+            <!-- Sign In Form (OTP-based for existing users) -->
             <form id="signinForm" method="POST" action="{% url 'signin' %}" class="auth-form">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required>
+                    <label for="signin-email">Email</label>
+                    <input type="email" id="signin-email" name="email" required>
                 </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
+                <div class="form-group" id="otp-section">
+                    <label for="otp">OTP</label>
+                    <input type="text" id="otp" name="otp" maxlength="6" pattern="[0-9]{6}" placeholder="Enter OTP" required>
                 </div>
-                <button type="submit" class="btn">Sign In</button>
+                <div class="otp-feedback" id="otpFeedback"></div>
+                <button type="button" class="btn" id="sendOtpBtn">Send OTP</button>
+                <button type="submit" class="btn" id="loginBtn" style="display:none;">Sign In</button>
             </form>
-            <!-- Sign Up Form -->
-            <form id="signupForm" method="POST" action="{% url 'signin' %}" class="auth-form" style="display: none;">
+            <!-- Sign Up Form (more presentable) -->
+            <form id="signupForm" method="POST" action="{% url 'signin' %}" class="auth-form" style="display: none; background: rgba(255,255,255,0.07); border-radius: 10px; padding: 20px; box-shadow: 0 2px 12px #0002;">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="signup-username">Username</label>
@@ -292,6 +327,22 @@ function switchTab(tab) {
         tabs[1].classList.add('active');
     }
 }
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const messages = document.querySelectorAll('.alert');
     messages.forEach(message => {
@@ -299,6 +350,112 @@ document.addEventListener('DOMContentLoaded', function() {
             switchTab('signup');
         }
     });
+
+    const otpSection = document.getElementById('otp-section');
+    const otpFeedback = document.getElementById('otpFeedback');
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+    const loginBtn = document.getElementById('loginBtn');
+    const emailInput = document.getElementById('signin-email');
+    const otpInput = document.getElementById('otp');
+
+    otpSection.classList.remove('visible');
+    otpFeedback.classList.remove('visible', 'error');
+    sendOtpBtn.style.display = '';
+    loginBtn.style.display = 'none';
+
+    sendOtpBtn.onclick = async function() {
+        const email = emailInput.value;
+        if (!email) {
+            otpFeedback.textContent = 'Please enter your email.';
+            otpFeedback.classList.add('visible', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch('/setup-otp/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ email: email })
+            });
+
+            const data = await response.json();
+            console.log('Response:', data); // Debug log
+
+            if (data.success) {
+                // Show QR code
+                const qrCodeImg = document.createElement('img');
+                qrCodeImg.src = `data:image/png;base64,${data.qr_code}`;
+                qrCodeImg.style.maxWidth = '200px';
+                qrCodeImg.style.margin = '10px auto';
+                qrCodeImg.style.display = 'block';
+                
+                // Show secret key
+                const secretKey = document.createElement('p');
+                secretKey.textContent = `Secret Key: ${data.secret}`;
+                secretKey.style.textAlign = 'center';
+                secretKey.style.margin = '10px 0';
+                
+                // Update feedback
+                otpFeedback.innerHTML = '';
+                otpFeedback.appendChild(document.createTextNode('Scan this QR code with your authenticator app:'));
+                otpFeedback.appendChild(qrCodeImg);
+                otpFeedback.appendChild(secretKey);
+                otpFeedback.classList.remove('error');
+                otpFeedback.classList.add('visible');
+                
+                // Show OTP input
+                otpSection.classList.add('visible');
+                sendOtpBtn.style.display = 'none';
+                loginBtn.style.display = '';
+            } else {
+                otpFeedback.textContent = data.error || 'Failed to setup OTP.';
+                otpFeedback.classList.add('visible', 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error); // Debug log
+            otpFeedback.textContent = 'Failed to setup OTP.';
+            otpFeedback.classList.add('visible', 'error');
+        }
+    };
+
+    // Handle form submission
+    document.getElementById('signinForm').onsubmit = async function(e) {
+        e.preventDefault();
+        
+        const email = document.getElementById('signin-email').value;
+        const otp = document.getElementById('otp').value;
+        
+        if (!email || !otp) {
+            alert('Please enter both email and OTP');
+            return;
+        }
+        
+        try {
+            const response = await fetch('/verify-otp/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ email, otp })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Redirect to home page
+                window.location.href = data.redirect || '/home/';
+            } else {
+                alert(data.error || 'Failed to verify OTP');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while verifying OTP');
+        }
+    };
 });
 </script>
 </body>
