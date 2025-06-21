@@ -1,0 +1,5 @@
+Django==5.1.6
+django-otp
+gunicorn
+psycopg2-binary
+whitenoise 
